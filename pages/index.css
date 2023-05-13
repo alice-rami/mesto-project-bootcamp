@@ -16,6 +16,13 @@
 @import url(../blocks/profile/__title/profile__title.css);
 @import url(../blocks/profile/__add-button/profile__add-button.css);
 
+@import url(../blocks/cards/cards.css);
+@import url(../blocks/card/card.css);
+@import url(../blocks/card/__title-container/card__title-container.css);
+@import url(../blocks/card/__title/card__title.css);
+@import url(../blocks/card/__image/card__image.css);
+@import url(../blocks/card/__like-button/card__like-button.css);
+
 * {
     outline: 1px solid yellow;
 }

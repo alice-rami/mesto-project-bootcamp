@@ -1,7 +1,7 @@
 .profile__edit-button {
     width: 24px;
     height: 24px;
-    display: block;
+    display: inline-block;
 }
 
 @media screen and (max-width: 580px) {

@@ -1,13 +1,27 @@
 .profile__info {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     row-gap: 16px;
+}
+
+@media screen and (max-width: 980px) {
+    .profile__info {
+        padding-top: 26px;
+        padding-bottom: 36px;
+        width: 80%;
+        text-align: center;
+        align-items: center;
+    }
+}
+
+@media screen and (max-width: 420px) {
+    .profile__info {
+        width: 100%;
+    }
 }
 
 @media screen and (max-width: 580px) {
     .profile__info {
         row-gap: 14px;
-        width: 100%;
     }
 }

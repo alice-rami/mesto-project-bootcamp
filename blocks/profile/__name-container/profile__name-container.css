@@ -3,6 +3,13 @@
     flex-direction: row;
     align-items: center;
     column-gap: 18px;
+    width: 100%;
+}
+
+@media screen and (max-width: 980px) {
+    .profile__name-container {
+        justify-content: center;
+    }
 }
 
 @media screen and (max-width: 580px) {

@@ -4,6 +4,6 @@
     background-image: url(../../../images/add-button.png);
     background-position: center;
     background-repeat: no-repeat;
-    border: 1px solid white;
-
+    border: 2px solid #FFFFFF;
+    border-radius: 2px;
 }

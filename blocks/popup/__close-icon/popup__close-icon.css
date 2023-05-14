@@ -7,3 +7,13 @@
     top: -40px;
     z-index: 2;
 }
+
+@media screen and (max-width: 580px) {
+    .popup__close-icon {
+        width: 20px;
+        height: 20px;
+        background-size: contain;
+        right: 0;
+        top: -36px;
+    }
+}

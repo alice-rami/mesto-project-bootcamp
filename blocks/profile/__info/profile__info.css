@@ -4,3 +4,10 @@
     justify-content: center;
     row-gap: 16px;
 }
+
+@media screen and (max-width: 580px) {
+    .profile__info {
+        row-gap: 14px;
+        width: 100%;
+    }
+}

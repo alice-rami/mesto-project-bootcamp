@@ -4,3 +4,9 @@
     align-items: center;
     column-gap: 18px;
 }
+
+@media screen and (max-width: 580px) {
+    .profile__name-container {
+        column-gap: 10px;
+    }
+}

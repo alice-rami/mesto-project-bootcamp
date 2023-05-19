@@ -3,7 +3,6 @@
     height: 20px;
     background-image: url(../../../images/heart-white.svg);
     background-size: contain;
-    flex-shrink: 0;
 }
 
 .card__like-button:hover {

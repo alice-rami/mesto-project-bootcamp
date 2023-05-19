@@ -6,7 +6,12 @@
     color: black;
     outline: none;
     border: none;
-    border-bottom: 1px solid #00000033;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     padding: 0 0 13px 0;
     display: block;
+}
+
+.popup__input:focus {
+    border-bottom: 1px solid rgba(255, 162, 0, 0.7);
+    background-color: rgba(255, 162, 0, 0.2);;
 }

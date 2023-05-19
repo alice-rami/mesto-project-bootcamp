@@ -3,12 +3,12 @@
     display: flex;
     flex-direction: column;
     row-gap: 30px;
-    padding: 54px 0 48px;
+    padding: 45px 0 44px;
     margin: 0;
 }
 
 @media screen and (max-width: 580px) {
     .popup__input-container {
-        padding: 75px 0 45px;
+        padding: 68px 0 45px;
     }
 }

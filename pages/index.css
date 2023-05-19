@@ -3,6 +3,7 @@
 
 @import url(../blocks/page/page.css);
 @import url(../blocks/content/content.css);
+@import url(../blocks/button/button.css);
 @import url(../blocks/opacity/opacity.css);
 
 @import url(../blocks/header/header.css);

@@ -17,11 +17,11 @@
             <div class="profile__info">
                 <div class="profile__name-container">
                     <h1 class="profile__name">Жак-Ив Кусто</h1>
-                    <img src="./images/edit-button.svg" alt="Изменить профиль" class="profile__edit-button opacity">
+                    <button type="button" aria-label="Изменить профиль" class="button profile__edit-button opacity"></button>
                 </div>
                 <p class="profile__about">Исследователь океана</p>
             </div>
-            <img src="./images/add-button.png" class="profile__add-button opacity" alt="Добавить">
+            <button type="button" class="button profile__add-button opacity" aria-label="Добавить"></button>
         </section>
         <section class="cards-container">
             <ul class="cards">
@@ -29,42 +29,42 @@
                     <img src="./images/karachaevsk.jpg" alt="Карачаевск" class="card__image">
                     <div class="card__title-container">
                         <h2 class="card__title">Карачаевск</h2>
-                        <img src="./images/heart-white.svg" alt="Поставить лайк" class="card__like-button">
+                        <button aria-label="Поставить лайк" class="button card__like-button"></button>
                     </div>
                 </li>
                 <li class="card">
                     <img src="./images/elbrus.jpg" alt="Эльбрус" class="card__image">
                     <div class="card__title-container">
                         <h2 class="card__title">Гора Эльбрус</h2>
-                        <img src="./images/heart-white.svg" alt="Поставить лайк" class="card__like-button">
+                        <button type="button" aria-label="Поставить лайк" class="button card__like-button"></button>
                     </div>
                 </li>
                 <li class="card">
                     <img src="./images/dombai.jpg" alt="Домбай" class="card__image">
                     <div class="card__title-container">
                         <h2 class="card__title">Домбай</h2>
-                        <img src="./images/heart-white.svg" alt="Поставить лайк" class="card__like-button">
+                        <button type="button" aria-label="Поставить лайк" class="button card__like-button"></button>
                     </div>
                 </li>
                 <li class="card">
                     <img src="./images/seliger.jpg" alt="Озеро Селигер" class="card__image">
                     <div class="card__title-container">
                         <h2 class="card__title">Озеро Селигер</h2>
-                        <img src="./images/heart-white.svg" alt="Поставить лайк" class="card__like-button">
+                        <button type="button" aria-label="Поставить лайк" class="button card__like-button"></button>
                     </div>
                 </li>
                 <li class="card">
                     <img src="./images/kemerovskaya.jpg" alt="Кемеровская область" class="card__image">
                     <div class="card__title-container">
                         <h2 class="card__title">Кемеровская область</h2>
-                        <img src="./images/heart-white.svg" alt="Поставить лайк" class="card__like-button">
+                        <button type="button" aria-label="Поставить лайк" class="button card__like-button"></button>
                     </div>
                 </li>
                 <li class="card">
                     <img src="./images/kamchatka.jpg" alt="Камчатский край" class="card__image">
                     <div class="card__title-container">
                         <h2 class="card__title">Камчатский край</h2>
-                        <img src="./images/heart-white.svg" alt="Поставить лайк" class="card__like-button">
+                        <button type="button" aria-label="Поставить лайк" class="button card__like-button"></button>
                     </div>
                 </li>
             </ul>
@@ -77,7 +77,7 @@
                     <input type="text" name="profile__about" id="profile__about" placeholder="О себе" class="popup__input">
                 </fieldset>
                 <input type="submit" value="Сохранить" class="popup__submit-button">
-                <div class="popup__close-icon opacity"></div>
+                <button type="button" aria-label="Закрыть" class="button popup__close-icon opacity"></button>
             </form>
         </div>
     </main>

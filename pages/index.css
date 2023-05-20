@@ -46,5 +46,7 @@
 @import url(../blocks/form/__input/form__input.css);
 @import url(../blocks/form/__submit-button/form__submit-button.css);
 
-@import url(../blocks/large-image/large-image.css);
-@import url(../blocks/large-image/__title/large-image__title.css);
+@import url(../blocks/view-template/view-template.css);
+@import url(../blocks/view-template/view-template.css);
+@import url(../blocks/view-template/__image/view-template__image.css);
+@import url(../blocks/view-template/__title/view-template__title.css);

@@ -41,11 +41,12 @@ const removeCard = evt => {
 // Просмотр фото
 
 const cardViewPopupElement = document.querySelector('.popup_type_view-image');
-const targetImageElement = cardViewPopupElement.querySelector('.large-image');
-const targetImageTitleElement = cardViewPopupElement.querySelector('.large-image__title');
+const targetImageElement = cardViewPopupElement.querySelector('.view-template__image');
+const targetImageTitleElement = cardViewPopupElement.querySelector('.view-template__title');
 
 const viewImage = evt => {
     const image = evt.target;
+    console.log(evt.target);
     targetImageElement.src = image.src;
     targetImageElement.alt = image.alt;
     targetImageTitleElement.textContent = image.alt;

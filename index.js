@@ -32,6 +32,13 @@ const handleLike = evt => {
 }
 
 
+// Удаление карточки
+
+const removeCard = evt => {
+    evt.target.closest('.card').remove();
+}
+
+
 // Создание карточки
 
 const cardTemplate = document.getElementById('card__template').content;
@@ -44,6 +51,7 @@ const createCard = (name, link) => {
     newCard.querySelector('.card__image').alt = name;
     cardsList.prepend(newCard);
     newCard.querySelector('.card__like-button').addEventListener('click', handleLike);
+    newCard.querySelector('.card__remove-button').addEventListener('click', removeCard);
 }
 
 initialCards.forEach(item => {
@@ -55,6 +63,14 @@ initialCards.forEach(item => {
 
 const likeButtonsList = Array.from(cardsList.querySelectorAll('.card__like-button'));
 likeButtonsList.forEach(item => item.addEventListener('click', handleLike));
+
+
+// Добавление слушателей кнопкам для удаления
+
+const removeButtonsList = Array.from(cardsList.querySelectorAll('.card__remove-button'));
+removeButtonsList.forEach(item => {
+    item.addEventListener('click', removeCard);
+})
 
 
 // Закрытие попапа

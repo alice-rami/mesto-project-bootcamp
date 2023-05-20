@@ -38,6 +38,20 @@ const removeCard = evt => {
     evt.target.closest('.card').remove();
 }
 
+// Просмотр фото
+
+const cardViewPopupElement = document.querySelector('.popup_type_view-image');
+const targetImageElement = cardViewPopupElement.querySelector('.large-image');
+const targetImageTitleElement = cardViewPopupElement.querySelector('.large-image__title');
+
+const viewImage = evt => {
+    const image = evt.target;
+    targetImageElement.src = image.src;
+    targetImageElement.alt = image.alt;
+    targetImageTitleElement.textContent = image.alt;
+    cardViewPopupElement.classList.add('popup_opened');
+}
+
 
 // Создание карточки
 
@@ -46,9 +60,11 @@ const cardsList = document.querySelector('.cards__list');
 
 const createCard = (name, link) => {
     const newCard = cardTemplate.querySelector('.card').cloneNode(true);
-    newCard.querySelector('.card__image').src = link;
+    const newCardImage = newCard.querySelector('.card__image');
+    newCardImage.src = link;
+    newCardImage.alt = name;
+    newCardImage.addEventListener('click', viewImage);
     newCard.querySelector('.card__title').textContent = name;
-    newCard.querySelector('.card__image').alt = name;
     cardsList.prepend(newCard);
     newCard.querySelector('.card__like-button').addEventListener('click', handleLike);
     newCard.querySelector('.card__remove-button').addEventListener('click', removeCard);
@@ -70,7 +86,15 @@ likeButtonsList.forEach(item => item.addEventListener('click', handleLike));
 const removeButtonsList = Array.from(cardsList.querySelectorAll('.card__remove-button'));
 removeButtonsList.forEach(item => {
     item.addEventListener('click', removeCard);
-})
+});
+
+
+// Добавление слушателей изображениям для просмотра
+
+const imagesList = Array.from(cardsList.querySelectorAll('.card__image'));
+imagesList.forEach(item => {
+    item.addEventListener('click', viewImage);
+});
 
 
 // Закрытие попапа
@@ -86,7 +110,7 @@ popupCloseButtonsList.forEach(item => item.addEventListener('click', closePopup)
 // Редактирование профиля
 
 const profileElement = document.querySelector('.profile');
-const profilePopupElement = document.querySelector('.popup_profile');
+const profilePopupElement = document.querySelector('.popup_type_profile');
 
 const profileEditButtonElement = profileElement.querySelector('.profile__edit-button');
 
@@ -118,7 +142,7 @@ profileFormElement.addEventListener('submit', closePopup);
 // Добавление карточки
 
 const cardAddButtonElement = document.querySelector('.profile__add-button');
-const cardAddPopupElement = document.querySelector('.popup_add-card');
+const cardAddPopupElement = document.querySelector('.popup_type_add-card');
 const cardAddFormElement = cardAddPopupElement.querySelector('.form');
 
 const openCardAddPopup = () => {
@@ -138,7 +162,3 @@ cardAddFormElement.addEventListener('submit', handleCardAddFormSubmit);
 cardAddFormElement.addEventListener('submit', closePopup);
 
 
-
-// Просмотр фото
-
-// const cardViewPopupElement = document.querySelector('.popup_view-card');

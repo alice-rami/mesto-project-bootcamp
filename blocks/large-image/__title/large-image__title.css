@@ -1,0 +1,8 @@
+.large-image__title {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 15px;
+    z-index: 2;
+    padding: 0;
+    margin: 0;
+}

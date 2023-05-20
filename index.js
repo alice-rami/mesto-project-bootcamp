@@ -49,7 +49,7 @@ const viewImage = evt => {
     targetImageElement.src = image.src;
     targetImageElement.alt = image.alt;
     targetImageTitleElement.textContent = image.alt;
-    cardViewPopupElement.classList.add('popup_opened');
+    cardViewPopupElement.classList.add('popup_opened', 'popup_effect_fade-in');
 }
 
 
@@ -100,7 +100,10 @@ imagesList.forEach(item => {
 // Закрытие попапа
 
 const closePopup = evt => {
-    evt.target.closest('.popup').classList.remove('popup_opened');
+    evt.target.closest('.popup').classList.add('popup_effect_fade-out');
+    setTimeout(() => {
+        evt.target.closest('.popup').classList.remove('popup_opened', 'popup_effect_fade-out', 'popup_effect_fade-in');
+    }, 2000);
 }
 
 const popupCloseButtonsList = Array.from(document.querySelectorAll('.popup__close-icon'));
@@ -122,7 +125,7 @@ const profileNameInput = profileFormElement.querySelector('#profile-name');
 const profileAboutInput = profileFormElement.querySelector('#profile-about');
 
 const openProfilePopup = () => {
-    profilePopupElement.classList.add('popup_opened');
+    profilePopupElement.classList.add('popup_opened', 'popup_effect_fade-in');
     profileNameInput.value = profileNameElement.textContent;
     profileAboutInput.value = profileAboutElement.textContent;
 }
@@ -146,7 +149,7 @@ const cardAddPopupElement = document.querySelector('.popup_type_add-card');
 const cardAddFormElement = cardAddPopupElement.querySelector('.form');
 
 const openCardAddPopup = () => {
-    cardAddPopupElement.classList.add('popup_opened');
+    cardAddPopupElement.classList.add('popup_opened', 'popup_effect_fade-in');
 }
 
 cardAddButtonElement.addEventListener('click', openCardAddPopup);

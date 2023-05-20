@@ -25,22 +25,37 @@ const initialCards = [
     }
 ];
 
+// Лайк
+
+const handleLike = evt => {
+    evt.target.classList.toggle('card__like-button_active');
+}
+
+
 // Создание карточки
 
 const cardTemplate = document.getElementById('card__template').content;
+const cardsList = document.querySelector('.cards__list');
 
 const createCard = (name, link) => {
-    const cardsList = document.querySelector('.cards__list');
     const newCard = cardTemplate.querySelector('.card').cloneNode(true);
     newCard.querySelector('.card__image').src = link;
     newCard.querySelector('.card__title').textContent = name;
     newCard.querySelector('.card__image').alt = name;
-    cardsList.append(newCard);
+    cardsList.prepend(newCard);
+    newCard.querySelector('.card__like-button').addEventListener('click', handleLike);
 }
 
 initialCards.forEach(item => {
     createCard(item.name, item.link);
 });
+
+
+// Добавление слушателей кнопкам для лайка
+
+const likeButtonsList = Array.from(cardsList.querySelectorAll('.card__like-button'));
+likeButtonsList.forEach(item => item.addEventListener('click', handleLike));
+
 
 // Закрытие попапа
 
@@ -50,6 +65,7 @@ const closePopup = evt => {
 
 const popupCloseButtonsList = Array.from(document.querySelectorAll('.popup__close-icon'));
 popupCloseButtonsList.forEach(item => item.addEventListener('click', closePopup));
+
 
 // Редактирование профиля
 

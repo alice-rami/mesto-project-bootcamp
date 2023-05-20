@@ -57,14 +57,13 @@ const profileElement = document.querySelector('.profile');
 const profilePopupElement = document.querySelector('.popup_profile');
 
 const profileEditButtonElement = profileElement.querySelector('.profile__edit-button');
-const popupSubmitButtonElement = profilePopupElement.querySelector('.popup__submit-button');
 
 const profileNameElement = profileElement.querySelector('.profile__name');
 const profileAboutElement = profileElement.querySelector('.profile__about');
 
-const profileFormElement = profilePopupElement.querySelector('.popup__form');
-const profileNameInput = profileFormElement.querySelector('#profile__name');
-const profileAboutInput = profileFormElement.querySelector('#profile__about');
+const profileFormElement = profilePopupElement.querySelector('.form');
+const profileNameInput = profileFormElement.querySelector('#profile-name');
+const profileAboutInput = profileFormElement.querySelector('#profile-about');
 
 const openProfilePopup = () => {
     profilePopupElement.classList.add('popup_opened');
@@ -78,7 +77,6 @@ const handleProfileFormSubmit = (evt) => {
     evt.preventDefault();
     profileNameElement.textContent = profileNameInput.value;
     profileAboutElement.textContent = profileAboutInput.value;
-    closePopup();
 }
 
 profileFormElement.addEventListener('submit', handleProfileFormSubmit);
@@ -89,7 +87,7 @@ profileFormElement.addEventListener('submit', closePopup);
 
 const cardAddButtonElement = document.querySelector('.profile__add-button');
 const cardAddPopupElement = document.querySelector('.popup_add-card');
-const cardAddFormElement = cardAddPopupElement.querySelector('.popup__form');
+const cardAddFormElement = cardAddPopupElement.querySelector('.form');
 
 const openCardAddPopup = () => {
     cardAddPopupElement.classList.add('popup_opened');
@@ -99,12 +97,9 @@ cardAddButtonElement.addEventListener('click', openCardAddPopup);
 
 const handleCardAddFormSubmit = (evt) => {
     evt.preventDefault();
-    const cardTitleInput = document.getElementById('place__title');
-    const cardLinkInput = document.getElementById('place__link');
+    const cardTitleInput = document.getElementById('place-title');
+    const cardLinkInput = document.getElementById('place-link');
     createCard(cardTitleInput.value, cardLinkInput.value);
-    console.log(evt.target);
-    console.log(evt.target.closest('.popup').classList);
-    closePopup();
 }
 
 cardAddFormElement.addEventListener('submit', handleCardAddFormSubmit);

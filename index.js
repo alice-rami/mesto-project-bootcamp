@@ -1,9 +1,12 @@
 const profileElement = document.querySelector('.profile');
-const profilePopupElement = document.querySelector('.popup');
+const profilePopupElement = document.querySelector('.popup_profile');
+// const cardAddPopupElement = document.querySelector('.popup_add-card');
+// const cardViewPopupElement = document.querySelector('.popup_view-card');
 
 const profileEditButtonElement = profileElement.querySelector('.profile__edit-button');
-const popupCloseButtonElement = profilePopupElement.querySelector('.popup__close-icon');
 const popupSubmitButtonElement = profilePopupElement.querySelector('.popup__submit-button');
+// const popupCardAddButtonElement = profileElement.querySelector('.profile__add-button');
+
 
 const profileNameElement = profileElement.querySelector('.profile__name');
 const profileAboutElement = profileElement.querySelector('.profile__about');
@@ -12,25 +15,36 @@ const profileFormElement = profilePopupElement.querySelector('.popup__form');
 const profileNameInput = profileFormElement.querySelector('#profile__name');
 const profileAboutInput = profileFormElement.querySelector('#profile__about');
 
-const openPopup = () => {
+const openProfilePopup = () => {
     profilePopupElement.classList.add('popup_opened');
     profileNameInput.value = profileNameElement.textContent;
     profileAboutInput.value = profileAboutElement.textContent;
 }
 
-profileEditButtonElement.addEventListener('click', openPopup);
+profileEditButtonElement.addEventListener('click', openProfilePopup);
 
-const closePopup = () => {
-    profilePopupElement.classList.remove('popup_opened');
+const openCardAddPopup = () => {
+    cardAddPopupElement.classList.add('popup_opened');
 }
 
-popupCloseButtonElement.addEventListener('click', closePopup);
+// popupCardAddButtonElement.addEventListener('click', openCardAddPopup);
 
-const handleFormSubmit = (evt) => {
+// Закрытие попапа
+
+const closePopup = (event) => {
+    event.target.closest('.popup').classList.remove('popup_opened');
+}
+
+const popupCloseButtonsList = Array.from(document.querySelectorAll('.popup__close-icon'));
+popupCloseButtonsList.forEach(item => item.addEventListener('click', closePopup));
+
+// Обработка отправки формы 
+
+const handleProfileFormSubmit = (evt) => {
     evt.preventDefault();
     profileNameElement.textContent = profileNameInput.value;
     profileAboutElement.textContent = profileAboutInput.value;
     closePopup();
 }
 
-profileFormElement.addEventListener('submit', handleFormSubmit);
+profileFormElement.addEventListener('submit', handleProfileFormSubmit);

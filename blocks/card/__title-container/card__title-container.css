@@ -2,7 +2,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-left: 21px;
-    padding-right: 15px;
+    padding: 20px 15px 30px 21px;
     column-gap: 30px;
 }

@@ -1,0 +1,15 @@
+@keyframes fade-out {
+    from {
+        opacity: 1;
+	    visibility: visible;
+    }
+    to {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+
+.popup_effect_fade-out {
+    animation: fade-out 0.5s ease-in forwards;
+}

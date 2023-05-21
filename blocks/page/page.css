@@ -8,4 +8,7 @@
     font-style: normal;
     color: white;
     position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }

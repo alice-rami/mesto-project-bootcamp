@@ -1,7 +1,6 @@
 .profile {
     display: grid;
     grid-template-columns: 120px minmax(336px, 550px) 150px;
-    grid-template-rows: 120px;
     column-gap: 30px;
     padding-top: 40px;
     padding-bottom: 50px;
@@ -11,7 +10,6 @@
 @media screen and (max-width: 980px) {
     .profile {
         grid-template-columns: 100%;
-        grid-template-rows: 120px 1fr 50px;
         padding-top: 42px;
         padding-bottom: 36px;
         align-items: start;

@@ -113,6 +113,7 @@ const handleCardAddFormSubmit = (evt) => {
     const cardLinkInput = document.getElementById('place-link');
     const newCard = createCard(cardTitleInput.value, cardLinkInput.value);
     cardsContainer.prepend(newCard);
+    cardAddFormElement.reset();
     closePopup(cardAddPopupElement);
 }
 

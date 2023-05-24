@@ -27,8 +27,10 @@ const initialCards = [
 
 // Переменные
 
-// Шаблон для создания карточки и контейнер для добавления карточек
-const cardTemplate = document.getElementById('card__template').content;
+// Шаблон для создания карточки, поля формы и контейнер для добавления карточек
+const cardTemplate = document.getElementById('card__template').content.querySelector('.card');
+const cardTitleInput = document.getElementById('place-title');
+const cardLinkInput = document.getElementById('place-link');
 const cardsContainer = document.querySelector('.cards__list');
 
 // Кнопка, попап и форма для добавления карточки
@@ -73,28 +75,28 @@ const openPopup = popup => {
 
 cardAddButtonElement.addEventListener('click', () => openPopup(cardAddPopupElement));
 
-const viewImage = image => {
-    targetImageElement.src = image.src;
-    targetImageElement.alt = image.alt;
-    targetImageTitleElement.textContent = image.alt;
+const viewImage = cardData => {
+    targetImageElement.src = cardData.link;
+    targetImageElement.alt = cardData.name;
+    targetImageTitleElement.textContent = cardData.name;
     openPopup(cardViewPopupElement);
 }
 
-const createCard = (name, link) => {
-    const newCard = cardTemplate.querySelector('.card').cloneNode(true);
+const createCard = (cardData) => {
+    const newCard = cardTemplate.cloneNode(true);
     const newCardImage = newCard.querySelector('.card__image');
     const newCardLikeButton = newCard.querySelector('.card__like-button');
-    newCardImage.src = link;
-    newCardImage.alt = name;
-    newCardImage.addEventListener('click', () => viewImage(newCardImage));
-    newCard.querySelector('.card__title').textContent = name;
+    newCardImage.src = cardData.link;
+    newCardImage.alt = cardData.name;
+    newCardImage.addEventListener('click', () => viewImage(cardData));
+    newCard.querySelector('.card__title').textContent = cardData.name;
     newCardLikeButton.addEventListener('click', () => handleLikeButton(newCardLikeButton));
     newCard.querySelector('.card__remove-button').addEventListener('click', () => removeCard(newCard));
     return newCard;
 }
 
 initialCards.forEach(item => {
-    const newCard = createCard(item.name, item.link);
+    const newCard = createCard(item);
     cardsContainer.append(newCard);
 });
 
@@ -109,9 +111,11 @@ popupCloseButtonsList.forEach(item => item.addEventListener('click', () => close
 
 const handleCardAddFormSubmit = (evt) => {
     evt.preventDefault();
-    const cardTitleInput = document.getElementById('place-title');
-    const cardLinkInput = document.getElementById('place-link');
-    const newCard = createCard(cardTitleInput.value, cardLinkInput.value);
+    const cardData = {
+        name: cardTitleInput.value, 
+        link: cardLinkInput.value
+    };
+    const newCard = createCard(cardData);
     cardsContainer.prepend(newCard);
     cardAddFormElement.reset();
     closePopup(cardAddPopupElement);

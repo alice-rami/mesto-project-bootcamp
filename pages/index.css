@@ -39,9 +39,9 @@
 @import url(../blocks/popup/_type/popup_type_view-image.css);
 @import url(../blocks/popup/_effect/popup_effect_fade-in.css);
 @import url(../blocks/popup/_effect/popup_effect_fade-out.css);
+@import url(../blocks/popup/__heading/popup__heading.css);
 
 @import url(../blocks/form/form.css);
-@import url(../blocks/form/__heading/form__heading.css);
 @import url(../blocks/form/__input-container/form__input-container.css);
 @import url(../blocks/form/__input/form__input.css);
 @import url(../blocks/form/__submit-button/form__submit-button.css);

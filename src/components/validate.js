@@ -1,13 +1,15 @@
-import { settings } from './index.js';
+import { settings } from '../../index.js';
 
 const showError = (input, errorMessage) => {
     const errorElement = document.querySelector(`#error-${input.id}`);
     errorElement.textContent = errorMessage;
+    input.classList.add(settings.inputInvalidSelector);
 }
 
-const hideError = (input) => {
+export const hideError = (input) => {
     const errorElement = document.querySelector(`#error-${input.id}`);
     errorElement.textContent = '';
+    input.classList.remove(settings.inputInvalidSelector);
 }
 
 const enableButton = (submitButton) => {
@@ -18,7 +20,7 @@ export const disableButton = (submitButton) => {
     submitButton.disabled = true;
 }
 
-const checkInputValidity = (input) => {
+export const checkInputValidity = (input) => {
     if (input.validity.valid) {
         hideError(input);
     } else {

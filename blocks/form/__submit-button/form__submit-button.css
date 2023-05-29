@@ -16,6 +16,13 @@
     opacity: 0.8;
 }
 
+.form__submit-button:disabled {
+    opacity: 0.2;
+    background-color: transparent;
+    color: #000000;
+    border: 1px solid #000000;
+    cursor: default;
+}
 
 @media screen and (max-width: 580px) {
     .form__submit-button {

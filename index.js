@@ -31,9 +31,9 @@ const profileFormElement = profilePopupElement.querySelector('.form');
 const profileNameInput = profileFormElement.querySelector('#profile-name');
 const profileAboutInput = profileFormElement.querySelector('#profile-about');
 
-// Список для добавления слушателей
+// Списки для добавления слушателей
 const popupCloseButtonsList = Array.from(document.querySelectorAll('.popup__close-icon'));
-
+const popupsList = document.querySelectorAll('.popup');
 
 // Функции и добавление слушателей
 
@@ -116,6 +116,21 @@ const handleProfileFormSubmit = (evt) => {
 }
 
 profileFormElement.addEventListener('submit', handleProfileFormSubmit);
+
+
+// Закрытие попапа по клику на оверлей
+
+const closeByClickOnOverlay = (evt) => {
+    console.log(evt.target);
+    if (evt.target.classList.contains('popup')) {
+        closePopup(evt.target);
+    }
+}
+
+popupsList.forEach(popupElement => {
+    popupElement.addEventListener('mousedown', closeByClickOnOverlay);
+});
+
 
 // Валидация
 

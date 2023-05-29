@@ -1,3 +1,5 @@
+// Переменные
+
 const initialCards = [
     {
         name: 'Архыз',
@@ -24,8 +26,6 @@ const initialCards = [
         link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
     }
 ];
-
-// Переменные
 
 // Шаблон для создания карточки, поля формы и контейнер для добавления карточек
 const cardTemplate = document.getElementById('card__template').content.querySelector('.card');
@@ -70,7 +70,7 @@ const removeCard = cardElement => {
 }
 
 const openPopup = popup => {
-    popup.classList.add('popup_opened', 'popup_effect_fade-in');
+    popup.classList.add('popup_opened');
 }
 
 cardAddButtonElement.addEventListener('click', () => openPopup(cardAddPopupElement));
@@ -101,10 +101,7 @@ initialCards.forEach(item => {
 });
 
 const closePopup = popup => {
-    popup.classList.add('popup_effect_fade-out');
-    setTimeout(() => {
-        popup.classList.remove('popup_opened', 'popup_effect_fade-out', 'popup_effect_fade-in');
-    }, 2000);
+    popup.classList.remove('popup_opened');
 }
 
 popupCloseButtonsList.forEach(item => item.addEventListener('click', () => closePopup(item.closest('.popup'))));

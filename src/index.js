@@ -1,5 +1,6 @@
+import './pages/index.css';
 import { initialCards } from "./components/initialCards.js";
-import { enableValidation, disableButton } from "./components/validate.js";
+import { enableValidation, disableButton, hideError } from "./components/validate.js";
 import { createCard } from "./components/card.js";
 import { openPopup, closePopup, closeByClickOnOverlay } from "./components/modal.js";
 
@@ -92,3 +93,11 @@ export const settings = {
 }; 
 
 enableValidation(settings);
+
+export const handleFormClosing = (form) => {
+    const inputsList = Array.from(form.querySelectorAll(settings.inputSelector));
+    inputsList.forEach(inputField => {
+        hideError(inputField);
+    });
+    form.reset();
+}

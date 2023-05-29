@@ -4,16 +4,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./pages/index.css">
     <title>Mesto</title>
 </head>
 <body class="page">
     <header class="header">
-        <img src="./images/logo-white.svg" alt="Логотип проекта Mestro" class="header__logo">
+        <img src="<%=require('./images/logo-white.svg')%>" alt="Логотип проекта Mestro" class="header__logo">
     </header>
     <main class="content">
         <section class="profile">
-            <img src="./images/profile-image.jpg" alt="Аватар" class="profile__avatar">
+            <img src="<%=require('./images/profile-image.jpg')%>" alt="Аватар" class="profile__avatar">
             <div class="profile__info">
                 <div class="profile__name-container">
                     <h1 class="profile__name">Жак-Ив Кусто</h1>

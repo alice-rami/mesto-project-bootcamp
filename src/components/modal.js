@@ -1,14 +1,11 @@
-import { settings } from "../../index.js";
-import { hideError } from "./validate.js";
+import { handleFormClosing, settings } from "../index.js";
 
 export const closePopup = popup => {
     popup.classList.remove('popup_opened');
     const popupForm = popup.querySelector(settings.formSelector);
-    const inputsList = Array.from(popupForm.querySelectorAll(settings.inputSelector));
-    inputsList.forEach(inputField => {
-        hideError(inputField);
-    });
-    popupForm.reset();
+    if (popupForm) {
+        handleFormClosing(popupForm);
+    }
 }
 
 const closeByEsc = (evt) => {

@@ -1,4 +1,4 @@
-import { settings } from '../../index.js';
+import { settings } from '../index.js';
 
 const showError = (input, errorMessage) => {
     const errorElement = document.querySelector(`#error-${input.id}`);

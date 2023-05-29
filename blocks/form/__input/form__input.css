@@ -7,13 +7,13 @@
     outline: none;
     border: none;
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-    padding: 0 0 13px 0;
+    padding: 0 0 10px 0;
     display: block;
 }
 
 .form__input:focus {
-    border-bottom: 1px solid rgba(255, 162, 0, 0.7);
-    background-color: rgba(255, 162, 0, 0.2);;
+    border-bottom: 1px solid rgba(59, 82, 228, 0.7);
+    background-color: rgba(59, 82, 228, 0.2);;
 }
 
 .form__input:invalid {

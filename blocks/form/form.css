@@ -1,8 +1,8 @@
 .form {
     display: flex;
     flex-direction: column;
-    min-width: 430px;
-    padding: 45px 36px 37px;
+    width: 430px;
+    padding: 48px 36px 36px;
     margin: 0;
     z-index: 2;
     position: relative;
@@ -11,7 +11,7 @@
 
 @media screen and (max-width: 580px) {
     .form {
-        min-width: 282px;
-        padding: 68px 22px 25px;
+        width: 282px;
+        padding: 75px 22px 25px;
     }
 }

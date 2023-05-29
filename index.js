@@ -49,7 +49,10 @@ const openPopup = popup => {
     popup.classList.add('popup_opened');
 }
 
-cardAddButtonElement.addEventListener('click', () => openPopup(cardAddPopupElement));
+cardAddButtonElement.addEventListener('click', () => {
+    openPopup(cardAddPopupElement);
+    cardAddFormElement.reset();
+});
 
 const viewImage = cardData => {
     targetImageElement.src = cardData.link;

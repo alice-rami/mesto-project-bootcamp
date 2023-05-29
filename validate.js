@@ -14,7 +14,7 @@ const enableButton = (submitButton) => {
     submitButton.disabled = false;
 }
 
-const disableButton = (submitButton) => {
+export const disableButton = (submitButton) => {
     submitButton.disabled = true;
 }
 

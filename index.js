@@ -1,5 +1,5 @@
 import { initialCards } from "./initialCards.js";
-import { enableValidation } from "./validate.js";
+import { enableValidation, disableButton } from "./validate.js";
 
 // Переменные
 
@@ -91,6 +91,7 @@ const handleCardAddFormSubmit = (evt) => {
     const newCard = createCard(cardData);
     cardsContainer.prepend(newCard);
     cardAddFormElement.reset();
+    disableButton(evt.submitter);
     closePopup(cardAddPopupElement);
 }
 

@@ -26,7 +26,7 @@ const checkInputValidity = (input) => {
     } 
 }
     
-const checkFormValidity = (form, submitButton) => {
+export const checkFormValidity = (form, submitButton) => {
     if (form.checkValidity()) {
         enableButton(submitButton);
     } else {

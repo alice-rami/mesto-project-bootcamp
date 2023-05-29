@@ -1,5 +1,5 @@
 import { initialCards } from "./initialCards.js";
-import { enableValidation, disableButton } from "./validate.js";
+import { enableValidation, disableButton, checkFormValidity } from "./validate.js";
 
 // Переменные
 
@@ -45,8 +45,28 @@ const removeCard = cardElement => {
     cardElement.remove();
 }
 
+const closePopup = popup => {
+    popup.classList.remove('popup_opened');   
+}
+
+popupCloseButtonsList.forEach(item => item.addEventListener('click', () => closePopup(item.closest('.popup'))));
+
+// Закрытие попапа по нажатию Escape
+
+const closeByEsc = (evt) => {
+    if (evt.key === 'Escape') {
+        const openedPopup = document.querySelector('.popup_opened');
+        closePopup(openedPopup);
+        document.removeEventListener('keydown', closeByEsc);
+    }
+}
+
 const openPopup = popup => {
     popup.classList.add('popup_opened');
+    const popupForm = popup.querySelector(settings.formSelector);
+    const submitButton = popup.querySelector(settings.submitButtonSelector);
+    checkFormValidity(popupForm, submitButton);
+    document.addEventListener('keydown', closeByEsc);
 }
 
 cardAddButtonElement.addEventListener('click', () => {
@@ -79,11 +99,6 @@ initialCards.forEach(item => {
     cardsContainer.append(newCard);
 });
 
-const closePopup = popup => {
-    popup.classList.remove('popup_opened');
-}
-
-popupCloseButtonsList.forEach(item => item.addEventListener('click', () => closePopup(item.closest('.popup'))));
 
 const handleCardAddFormSubmit = (evt) => {
     evt.preventDefault();

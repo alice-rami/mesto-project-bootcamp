@@ -6,6 +6,13 @@ import { openPopup, closePopup, closeByClickOnOverlay } from "./components/modal
 
 // Переменные
 
+export const settings = {
+    formSelector: '.form',
+    inputSelector: '.form__input',
+    inputInvalidSelector: '.form__input_invalid',
+    submitButtonSelector: '.form__submit-button',
+}; 
+
 // Поля формы и контейнер для создания карточки
 
 const cardTitleInput = document.getElementById('place-title');
@@ -33,17 +40,20 @@ const profileAboutInput = profileFormElement.querySelector('#profile-about');
 const popupCloseButtonsList = Array.from(document.querySelectorAll('.popup__close-icon'));
 const popupsList = document.querySelectorAll('.popup');
 
-// Функции и добавление слушателей
-
-popupCloseButtonsList.forEach(item => item.addEventListener('click', () => closePopup(item.closest('.popup'))));
-
-cardAddButtonElement.addEventListener('click', () => {
-    openPopup(cardAddPopupElement);
-});
-
+// Создание карточек из исходного массива
 initialCards.forEach(item => {
     const newCard = createCard(item);
     cardsContainer.append(newCard);
+});
+
+// Функции и добавление слушателей
+
+popupCloseButtonsList.forEach(item => {
+    item.addEventListener('click', () => closePopup(item.closest('.popup')))
+});
+
+cardAddButtonElement.addEventListener('click', () => {
+    openPopup(cardAddPopupElement);
 });
 
 const handleCardAddFormSubmit = (evt) => {
@@ -81,16 +91,6 @@ profileFormElement.addEventListener('submit', handleProfileFormSubmit);
 popupsList.forEach(popupElement => {
     popupElement.addEventListener('mousedown', closeByClickOnOverlay);
 });
-
-
-// Валидация
-
-export const settings = {
-    formSelector: '.form',
-    inputSelector: '.form__input',
-    inputInvalidSelector: '.form__input_invalid',
-    submitButtonSelector: '.form__submit-button',
-}; 
 
 enableValidation(settings);
 

@@ -1,12 +1,6 @@
-import { handleFormClosing, settings } from "../index.js";
-
 export const closePopup = popup => {
     popup.classList.remove('popup_opened');
     document.removeEventListener('keydown', closeByEsc);
-    const popupForm = popup.querySelector(settings.formSelector);
-    if (popupForm) {
-        handleFormClosing(popupForm);
-    }
 }
 
 const closeByEsc = (evt) => {

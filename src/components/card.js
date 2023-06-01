@@ -28,6 +28,7 @@ export const createCard = (cardData) => {
     newCardImage.alt = cardData.name;
     newCardImage.addEventListener('click', () => viewImage(cardData));
     newCard.querySelector('.card__title').textContent = cardData.name;
+    newCard.querySelector('.card__likes-count').textContent = cardData.likes.length;
     newCardLikeButton.addEventListener('click', () => handleLikeButton(newCardLikeButton));
     newCard.querySelector('.card__remove-button').addEventListener('click', () => removeCard(newCard));
     return newCard;

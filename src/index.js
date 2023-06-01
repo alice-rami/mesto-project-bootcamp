@@ -3,6 +3,7 @@ import { initialCards } from "./components/initialCards.js";
 import { enableValidation } from "./components/validate.js";
 import { createCard } from "./components/card.js";
 import { openPopup, closePopup, closeByClickOnOverlay } from "./components/modal.js";
+import { loadUserData } from './components/api.js';
 
 // Переменные
 
@@ -28,6 +29,7 @@ const cardLinkInput = cardAddFormElement.elements['place-link'];
 const profileElement = document.querySelector('.profile');
 const profileNameElement = profileElement.querySelector('.profile__name');
 const profileAboutElement = profileElement.querySelector('.profile__about');
+const profileAvatarElement = profileElement.querySelector('.profile__avatar');
 const profileEditButtonElement = profileElement.querySelector('.profile__edit-button');
 
 // Попап и форма для редактирования профиля
@@ -70,6 +72,22 @@ const handleCardAddFormSubmit = (evt) => {
 }
 
 cardAddFormElement.addEventListener('submit', handleCardAddFormSubmit);
+
+// Загрузка информации о пользователе с сервера
+
+const renderUserData = () => {
+    loadUserData()
+    .then(res => {
+        profileNameElement.textContent = res.name;
+        profileAboutElement.textContent = res.about;
+        profileAvatarElement.src = res.avatar;
+       })
+    .catch(err => {
+        console.log(err);
+    })
+}
+
+renderUserData();
 
 const openProfilePopup = () => {
     profileFormElement.reset();

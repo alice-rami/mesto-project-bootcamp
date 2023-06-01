@@ -1,9 +1,8 @@
 import './pages/index.css';
-import { initialCards } from "./components/initialCards.js";
 import { enableValidation } from "./components/validate.js";
 import { createCard } from "./components/card.js";
 import { openPopup, closePopup, closeByClickOnOverlay } from "./components/modal.js";
-import { loadUserData } from './components/api.js';
+import { loadInitialCards, loadUserData } from './components/api.js';
 
 // Переменные
 
@@ -43,10 +42,21 @@ const popupCloseButtonsList = Array.from(document.querySelectorAll('.popup__clos
 const popupsList = document.querySelectorAll('.popup');
 
 // Создание карточек из исходного массива
-initialCards.forEach(item => {
-    const newCard = createCard(item);
-    cardsContainer.append(newCard);
-});
+const renderInitialCards = () => {
+    loadInitialCards()
+    .then(res => {
+        res.forEach(item => {
+         const newCard = createCard(item);
+         cardsContainer.append(newCard);
+        })
+    })
+    .catch(err => {
+        console.log(err)
+    });
+}
+
+renderInitialCards();
+
 
 // Функции и добавление слушателей
 

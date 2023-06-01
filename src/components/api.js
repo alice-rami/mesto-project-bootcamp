@@ -22,4 +22,11 @@ const loadUserData = () => {
     .then(checkResponse);
 }
 
-export { loadUserData };
+const loadInitialCards = () => {
+    return fetch(`${config.baseUrl}/cards`, {
+        headers: config.headers
+    })
+    .then(checkResponse);
+}
+
+export { loadUserData, loadInitialCards };

@@ -1,3 +1,5 @@
+const popupsList = document.querySelectorAll('.popup');
+
 export const closePopup = popup => {
     popup.classList.remove('popup_opened');
     document.removeEventListener('keydown', closeByEsc);
@@ -20,3 +22,7 @@ export const closeByClickOnOverlay = (evt) => {
         closePopup(evt.target);
     }
 }
+
+popupsList.forEach(popupElement => {
+    popupElement.addEventListener('mousedown', closeByClickOnOverlay);
+});

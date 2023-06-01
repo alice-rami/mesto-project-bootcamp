@@ -41,4 +41,16 @@ const editUserData = (userData) => {
     .then(checkResponse);
 }
 
-export { loadUserData, loadInitialCards, editUserData };
+const addNewCard = (cardData) => {
+    return fetch(`${config.baseUrl}/cards`, {
+        headers: config.headers,
+        method: 'POST',
+        body: JSON.stringify({
+            name: cardData.name,
+            link: cardData.link
+        })
+    })
+    .then(checkResponse);
+}
+
+export { loadUserData, loadInitialCards, editUserData, addNewCard };

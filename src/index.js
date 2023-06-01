@@ -1,8 +1,8 @@
 import './pages/index.css';
 import { enableValidation } from "./components/validate.js";
 import { createCard } from "./components/card.js";
-import { openPopup, closePopup, closeByClickOnOverlay } from "./components/modal.js";
-import { editUserData, loadInitialCards, loadUserData } from './components/api.js';
+import { openPopup, closePopup } from "./components/modal.js";
+import { addNewCard, editUserData, loadInitialCards, loadUserData } from './components/api.js';
 
 // Переменные
 
@@ -39,7 +39,6 @@ const profileAboutInput = profileFormElement.elements['profile-about'];
 
 // Списки для добавления слушателей
 const popupCloseButtonsList = Array.from(document.querySelectorAll('.popup__close-icon'));
-const popupsList = document.querySelectorAll('.popup');
 
 // Создание карточек из исходного массива
 const renderInitialCards = () => {
@@ -75,8 +74,14 @@ const handleCardAddFormSubmit = (evt) => {
         name: cardTitleInput.value, 
         link: cardLinkInput.value
     };
-    const newCard = createCard(cardData);
-    cardsContainer.prepend(newCard);
+    addNewCard(cardData)
+    .then(res => {
+        const newCard = createCard(res);
+        cardsContainer.prepend(newCard);
+    })
+    .catch(err => {
+        console.log(err);
+    })
     cardAddFormElement.reset();
     closePopup(cardAddPopupElement);
 }
@@ -105,6 +110,8 @@ const openProfilePopup = () => {
 
 profileEditButtonElement.addEventListener('click', openProfilePopup);
 
+// Изменение данных профиля
+
 const handleProfileFormSubmit = (evt) => {
     evt.preventDefault();
     const userData = {
@@ -120,9 +127,5 @@ const handleProfileFormSubmit = (evt) => {
 }
 
 profileFormElement.addEventListener('submit', handleProfileFormSubmit);
-
-popupsList.forEach(popupElement => {
-    popupElement.addEventListener('mousedown', closeByClickOnOverlay);
-});
 
 enableValidation(settings);

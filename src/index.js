@@ -2,7 +2,7 @@ import './pages/index.css';
 import { enableValidation } from "./components/validate.js";
 import { createCard } from "./components/card.js";
 import { openPopup, closePopup, closeByClickOnOverlay } from "./components/modal.js";
-import { loadInitialCards, loadUserData } from './components/api.js';
+import { editUserData, loadInitialCards, loadUserData } from './components/api.js';
 
 // Переменные
 
@@ -84,20 +84,17 @@ const handleCardAddFormSubmit = (evt) => {
 cardAddFormElement.addEventListener('submit', handleCardAddFormSubmit);
 
 // Загрузка информации о пользователе с сервера
-
-const renderUserData = () => {
-    loadUserData()
-    .then(res => {
-        profileNameElement.textContent = res.name;
-        profileAboutElement.textContent = res.about;
-        profileAvatarElement.src = res.avatar;
-       })
-    .catch(err => {
-        console.log(err);
-    })
+const renderUserData = res => {
+    profileNameElement.textContent = res.name;
+    profileAboutElement.textContent = res.about;
+    profileAvatarElement.src = res.avatar;
 }
 
-renderUserData();
+loadUserData()
+    .then(renderUserData)
+    .catch(err => {
+        console.log(err);
+    });
 
 const openProfilePopup = () => {
     profileFormElement.reset();
@@ -110,8 +107,15 @@ profileEditButtonElement.addEventListener('click', openProfilePopup);
 
 const handleProfileFormSubmit = (evt) => {
     evt.preventDefault();
-    profileNameElement.textContent = profileNameInput.value;
-    profileAboutElement.textContent = profileAboutInput.value;
+    const userData = {
+        name: profileNameInput.value,
+        about: profileAboutInput.value
+    };
+    editUserData(userData)
+    .then(renderUserData)
+    .catch(err => {
+        console.log(err);
+    })
     closePopup(profilePopupElement);
 }
 

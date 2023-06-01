@@ -29,4 +29,16 @@ const loadInitialCards = () => {
     .then(checkResponse);
 }
 
-export { loadUserData, loadInitialCards };
+const editUserData = (userData) => {
+    return fetch(`${config.baseUrl}/users/me`, {
+        headers: config.headers,
+        method: 'PATCH',
+        body: JSON.stringify({
+            name: userData.name,
+            about: userData.about
+        })
+    })
+    .then(checkResponse);
+}
+
+export { loadUserData, loadInitialCards, editUserData };

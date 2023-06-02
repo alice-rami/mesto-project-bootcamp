@@ -22,14 +22,14 @@ const loadUserData = () => {
     .then(checkResponse);
 }
 
-const loadInitialCards = () => {
+const loadCardsData = () => {
     return fetch(`${config.baseUrl}/cards`, {
         headers: config.headers
     })
     .then(checkResponse);
 }
 
-const editUserData = (userData) => {
+const editUserData = userData => {
     return fetch(`${config.baseUrl}/users/me`, {
         headers: config.headers,
         method: 'PATCH',
@@ -41,7 +41,7 @@ const editUserData = (userData) => {
     .then(checkResponse);
 }
 
-const addNewCard = (cardData) => {
+const addNewCard = cardData => {
     return fetch(`${config.baseUrl}/cards`, {
         headers: config.headers,
         method: 'POST',
@@ -53,4 +53,15 @@ const addNewCard = (cardData) => {
     .then(checkResponse);
 }
 
-export { loadUserData, loadInitialCards, editUserData, addNewCard };
+const deleteCard = cardId => {
+    return fetch(`${config.baseUrl}/cards/${cardId}`, {
+        headers: config.headers,
+        method: 'DELETE',
+        body: JSON.stringify({
+            _id: cardId
+        })
+    })
+    .then(checkResponse);
+}
+
+export { loadUserData, loadCardsData, editUserData, addNewCard, deleteCard };

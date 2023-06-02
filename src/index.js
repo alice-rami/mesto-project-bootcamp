@@ -1,8 +1,8 @@
 import './pages/index.css';
 import { enableValidation } from "./components/validate.js";
-import { createCard } from "./components/card.js";
+import { createCardElement } from "./components/card.js";
 import { openPopup, closePopup } from "./components/modal.js";
-import { addNewCard, editUserData, loadInitialCards, loadUserData } from './components/api.js';
+import { addNewCard, deleteCard, editUserData, loadCardsData, loadUserData } from './components/api.js';
 
 // Переменные
 
@@ -40,24 +40,22 @@ const profileAboutInput = profileFormElement.elements['profile-about'];
 // Списки для добавления слушателей
 const popupCloseButtonsList = Array.from(document.querySelectorAll('.popup__close-icon'));
 
-// Создание карточек из исходного массива
-const renderInitialCards = () => {
-    loadInitialCards()
-    .then(res => {
-        res.forEach(item => {
-         const newCard = createCard(item);
-         cardsContainer.append(newCard);
-        })
+// Функции и добавление слушателей
+
+const handleDeleteCard = (cardId, deleteCardElement) => {
+    deleteCard(cardId)
+    .then(() => {
+        deleteCardElement();
     })
     .catch(err => {
-        console.log(err)
-    });
+        console.log(err);
+    })
 }
 
-renderInitialCards();
-
-
-// Функции и добавление слушателей
+const createCard = res => {
+    const newCard = createCardElement(res, handleDeleteCard);
+    return newCard;
+}
 
 popupCloseButtonsList.forEach(item => {
     item.addEventListener('click', () => closePopup(item.closest('.popup')))
@@ -93,6 +91,7 @@ const renderUserData = res => {
     profileNameElement.textContent = res.name;
     profileAboutElement.textContent = res.about;
     profileAvatarElement.src = res.avatar;
+    profileElement.setAttribute('_id', res._id);
 }
 
 loadUserData()
@@ -128,4 +127,19 @@ const handleProfileFormSubmit = (evt) => {
 
 profileFormElement.addEventListener('submit', handleProfileFormSubmit);
 
+// Загрузка карточек с сервера
+
+loadCardsData()
+.then(res => {
+    res.forEach(item => {
+        const newCard = createCard(item);
+         cardsContainer.append(newCard);
+        })
+    })
+    .catch(err => {
+        console.log(err)
+    });
+
+// Включение валидации
+    
 enableValidation(settings);

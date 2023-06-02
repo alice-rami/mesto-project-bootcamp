@@ -20,16 +20,23 @@ const viewImage = cardData => {
     openPopup(cardViewPopupElement);
 }
 
-export const createCard = (cardData) => {
+export const createCardElement = (cardData, handleDeleteCard) => {
     const newCard = cardTemplate.cloneNode(true);
     const newCardImage = newCard.querySelector('.card__image');
     const newCardLikeButton = newCard.querySelector('.card__like-button');
+    const newCardRemoveButton = newCard.querySelector('.card__remove-button');
+    const userId = document.querySelector('.profile').attributes._id;
     newCardImage.src = cardData.link;
     newCardImage.alt = cardData.name;
     newCardImage.addEventListener('click', () => viewImage(cardData));
     newCard.querySelector('.card__title').textContent = cardData.name;
     newCard.querySelector('.card__likes-count').textContent = cardData.likes.length;
     newCardLikeButton.addEventListener('click', () => handleLikeButton(newCardLikeButton));
-    newCard.querySelector('.card__remove-button').addEventListener('click', () => removeCard(newCard));
+    if (cardData.owner._id === userId.value) {
+        newCardRemoveButton.classList.add('card__remove-button_active');
+        newCardRemoveButton.addEventListener('click', () => {
+            handleDeleteCard(cardData._id, () => removeCard(newCard))
+        });
+    }
     return newCard;
 }

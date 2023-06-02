@@ -5,4 +5,5 @@
     width: 18px;
     height: 19px;
     background-image: url(../../../images/remove-button.svg);
+    display: none;
 }

@@ -14,6 +14,7 @@ export const settings = {
 }; 
 
 let userId;
+const loader = 'Сохранение...'
 
 // Контейнер для создания карточки
 
@@ -89,6 +90,18 @@ const openProfilePopup = () => {
 
 profileEditButtonElement.addEventListener('click', openProfilePopup);
 
+// Сохранение...
+
+const renderLoader = (isLoading, button, initialButtonText) => {
+        isLoading ? button.textContent = loader : button.textContent = initialButtonText;
+    }
+
+const toggleLoader = (evt, isLoading) => {
+        const submitButton = evt.submitter;
+        const initialText = submitButton.textContent;
+        renderLoader(isLoading, submitButton, initialText);
+    }
+    
 // Изменение данных профиля
 
 const handleProfileFormSubmit = (evt) => {
@@ -97,12 +110,18 @@ const handleProfileFormSubmit = (evt) => {
         name: profileNameInput.value,
         about: profileAboutInput.value
     };
+
+    toggleLoader(evt, true);
+    
     editUserData(userData)
     .then(renderUserData)
     .catch(err => {
         console.log(err);
     })
-    closePopup(profilePopupElement);
+    .finally(() => {
+        closePopup(profilePopupElement);
+        toggleLoader(evt, false);
+    })
 }
 
 profileFormElement.addEventListener('submit', handleProfileFormSubmit);
@@ -111,6 +130,9 @@ profileFormElement.addEventListener('submit', handleProfileFormSubmit);
 
 const handleEditAvatar = evt => {
     evt.preventDefault();
+
+    toggleLoader(evt, true);
+
     updateAvatar(avatarLinkInput.value)
     .then(res => {
         profileAvatarElement.src = res.avatar;
@@ -118,7 +140,11 @@ const handleEditAvatar = evt => {
     .catch(err => {
         console.log(err);
     })
-    closePopup(avatarPopupElement);
+    .finally(() => {
+        closePopup(avatarPopupElement);
+        toggleLoader(evt, false);
+    })
+    
 }
 
 avatarEditForm.addEventListener('submit', handleEditAvatar);
@@ -152,12 +178,16 @@ cardAddButtonElement.addEventListener('click', () => {
     openPopup(cardAddPopupElement);
 });
 
+
 const handleCardAddFormSubmit = (evt) => {
     evt.preventDefault();
     const cardData = {
         name: cardTitleInput.value, 
         link: cardLinkInput.value
     };
+
+    toggleLoader(evt, true);
+
     addNewCard(cardData)
     .then(res => {
         const newCard = createCard(res);
@@ -166,8 +196,11 @@ const handleCardAddFormSubmit = (evt) => {
     .catch(err => {
         console.log(err);
     })
-    cardAddFormElement.reset();
-    closePopup(cardAddPopupElement);
+    .finally(() => {
+        cardAddFormElement.reset();
+        toggleLoader(evt, false);
+        closePopup(cardAddPopupElement);
+    })
 }
 
 cardAddFormElement.addEventListener('submit', handleCardAddFormSubmit);

@@ -2,7 +2,7 @@ import './pages/index.css';
 import { enableValidation } from "./components/validate.js";
 import { createCardElement } from "./components/card.js";
 import { openPopup, closePopup } from "./components/modal.js";
-import { addNewCard, deleteCard, editUserData, loadCardsData, loadUserData } from './components/api.js';
+import { addNewCard, deleteCard, editUserData, loadCardsData, loadUserData, updateAvatar } from './components/api.js';
 
 // Переменные
 
@@ -38,6 +38,12 @@ const profilePopupElement = document.querySelector('.popup_type_profile');
 const profileFormElement = document.forms['profile-form'];
 const profileNameInput = profileFormElement.elements['profile-name'];
 const profileAboutInput = profileFormElement.elements['profile-about'];
+
+// Кнопка, попап и форма для изменения аватара
+const avatarEditButton = profileElement.querySelector('.profile__avatar-edit-button');
+const avatarPopupElement = document.querySelector('.popup_type_edit-avatar');
+const avatarEditForm = document.forms['avatar-form'];
+const avatarLinkInput = avatarEditForm.elements['avatar-link'];
 
 // Списки для добавления слушателей
 const popupCloseButtonsList = Array.from(document.querySelectorAll('.popup__close-icon'));
@@ -101,6 +107,26 @@ const handleProfileFormSubmit = (evt) => {
 
 profileFormElement.addEventListener('submit', handleProfileFormSubmit);
 
+// Изменение аватара
+
+const handleEditAvatar = evt => {
+    evt.preventDefault();
+    updateAvatar(avatarLinkInput.value)
+    .then(res => {
+        profileAvatarElement.src = res.avatar;
+    })
+    .catch(err => {
+        console.log(err);
+    })
+    closePopup(avatarPopupElement);
+}
+
+avatarEditForm.addEventListener('submit', handleEditAvatar);
+
+avatarEditButton.addEventListener('click', () => {
+    avatarEditForm.reset();
+    openPopup(avatarPopupElement);
+});
 
 const handleDeleteCard = (cardId, deleteCardElement) => {
     deleteCard(cardId)
@@ -145,8 +171,6 @@ const handleCardAddFormSubmit = (evt) => {
 }
 
 cardAddFormElement.addEventListener('submit', handleCardAddFormSubmit);
-
-
 
 // Включение валидации
     

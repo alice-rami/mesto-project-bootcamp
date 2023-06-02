@@ -86,4 +86,15 @@ const removeLike = cardId => {
     .then(checkResponse);
 }
 
-export { loadUserData, loadCardsData, editUserData, addNewCard, deleteCard, addLike, removeLike };
+const updateAvatar = newAvatarLink => {
+    return fetch(`${config.baseUrl}/users/me/avatar`, {
+        headers: config.headers,
+        method: 'PATCH',
+        body: JSON.stringify({
+            avatar: newAvatarLink
+        })
+    })
+    .then(checkResponse);
+}
+
+export { loadUserData, loadCardsData, editUserData, addNewCard, deleteCard, addLike, removeLike, updateAvatar };

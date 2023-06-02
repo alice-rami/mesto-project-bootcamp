@@ -96,15 +96,13 @@ profileEditButtonElement.addEventListener('click', openProfilePopup);
 
 // Сохранение...
 
-const renderLoader = (isLoading, button, initialButtonText) => {
-        isLoading ? button.textContent = loader : button.textContent = initialButtonText;
-    }
+const showLoader = (evt) => {
+    evt.submitter.textContent = loader;
+}
 
-const toggleLoader = (evt, isLoading) => {
-        const submitButton = evt.submitter;
-        const initialText = submitButton.textContent;
-        renderLoader(isLoading, submitButton, initialText);
-    }
+const restoreButtonText = (evt, buttonText) => {
+    evt.submitter.textContent = buttonText;
+}
     
 // Изменение данных профиля
 
@@ -115,7 +113,8 @@ const handleProfileFormSubmit = (evt) => {
         about: profileAboutInput.value
     };
 
-    toggleLoader(evt, true);
+    const buttonText = evt.submitter.textContent;
+    showLoader(evt);
     
     editUserData(userData)
     .then(renderUserData)
@@ -124,7 +123,7 @@ const handleProfileFormSubmit = (evt) => {
     })
     .finally(() => {
         closePopup(profilePopupElement);
-        toggleLoader(evt, false);
+        restoreButtonText(evt, buttonText);
     })
 }
 
@@ -135,7 +134,8 @@ profileFormElement.addEventListener('submit', handleProfileFormSubmit);
 const handleEditAvatar = evt => {
     evt.preventDefault();
 
-    toggleLoader(evt, true);
+    const buttonText = evt.submitter.textContent;
+    showLoader(evt);
 
     updateAvatar(avatarLinkInput.value)
     .then(res => {
@@ -146,9 +146,8 @@ const handleEditAvatar = evt => {
     })
     .finally(() => {
         closePopup(avatarPopupElement);
-        toggleLoader(evt, false);
+        restoreButtonText(evt, buttonText);
     })
-    
 }
 
 avatarEditForm.addEventListener('submit', handleEditAvatar);
@@ -202,7 +201,8 @@ const handleCardAddFormSubmit = (evt) => {
         link: cardLinkInput.value
     };
 
-    toggleLoader(evt, true);
+    const buttonText = evt.submitter.textContent;
+    showLoader(evt);
 
     addNewCard(cardData)
     .then(res => {
@@ -214,7 +214,7 @@ const handleCardAddFormSubmit = (evt) => {
     })
     .finally(() => {
         cardAddFormElement.reset();
-        toggleLoader(evt, false);
+        restoreButtonText(evt, buttonText);
         closePopup(cardAddPopupElement);
     })
 }

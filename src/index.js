@@ -13,6 +13,8 @@ export const settings = {
     submitButtonSelector: '.form__submit-button',
 }; 
 
+let userId;
+
 // Контейнер для создания карточки
 
 const cardsContainer = document.querySelector('.cards__list');
@@ -42,6 +44,64 @@ const popupCloseButtonsList = Array.from(document.querySelectorAll('.popup__clos
 
 // Функции и добавление слушателей
 
+// Загрузка информации о пользователе с сервера
+const renderUserData = res => {
+    profileNameElement.textContent = res.name;
+    profileAboutElement.textContent = res.about;
+    profileAvatarElement.src = res.avatar;
+    userId = res._id;
+}
+
+// Загрузка карточек с сервера
+
+const renderCardsData = () => {
+  loadCardsData()
+    .then(res => {
+        res.forEach(item => {
+            const newCard = createCard(item);
+             cardsContainer.append(newCard);
+            })
+        })
+    .catch(err => {
+            console.log(err)
+    })
+}
+
+loadUserData()
+    .then(renderUserData)
+    .then(renderCardsData)
+    .catch(err => {
+        console.log(err);
+    });
+
+const openProfilePopup = () => {
+    profileFormElement.reset();
+    profileNameInput.value = profileNameElement.textContent;
+    profileAboutInput.value = profileAboutElement.textContent;
+    openPopup(profilePopupElement);
+}
+
+profileEditButtonElement.addEventListener('click', openProfilePopup);
+
+// Изменение данных профиля
+
+const handleProfileFormSubmit = (evt) => {
+    evt.preventDefault();
+    const userData = {
+        name: profileNameInput.value,
+        about: profileAboutInput.value
+    };
+    editUserData(userData)
+    .then(renderUserData)
+    .catch(err => {
+        console.log(err);
+    })
+    closePopup(profilePopupElement);
+}
+
+profileFormElement.addEventListener('submit', handleProfileFormSubmit);
+
+
 const handleDeleteCard = (cardId, deleteCardElement) => {
     deleteCard(cardId)
     .then(() => {
@@ -53,7 +113,7 @@ const handleDeleteCard = (cardId, deleteCardElement) => {
 }
 
 const createCard = res => {
-    const newCard = createCardElement(res, handleDeleteCard);
+    const newCard = createCardElement(res, userId, handleDeleteCard);
     return newCard;
 }
 
@@ -86,59 +146,7 @@ const handleCardAddFormSubmit = (evt) => {
 
 cardAddFormElement.addEventListener('submit', handleCardAddFormSubmit);
 
-// Загрузка информации о пользователе с сервера
-const renderUserData = res => {
-    profileNameElement.textContent = res.name;
-    profileAboutElement.textContent = res.about;
-    profileAvatarElement.src = res.avatar;
-    profileElement.setAttribute('_id', res._id);
-}
 
-loadUserData()
-    .then(renderUserData)
-    .catch(err => {
-        console.log(err);
-    });
-
-const openProfilePopup = () => {
-    profileFormElement.reset();
-    profileNameInput.value = profileNameElement.textContent;
-    profileAboutInput.value = profileAboutElement.textContent;
-    openPopup(profilePopupElement);
-}
-
-profileEditButtonElement.addEventListener('click', openProfilePopup);
-
-// Изменение данных профиля
-
-const handleProfileFormSubmit = (evt) => {
-    evt.preventDefault();
-    const userData = {
-        name: profileNameInput.value,
-        about: profileAboutInput.value
-    };
-    editUserData(userData)
-    .then(renderUserData)
-    .catch(err => {
-        console.log(err);
-    })
-    closePopup(profilePopupElement);
-}
-
-profileFormElement.addEventListener('submit', handleProfileFormSubmit);
-
-// Загрузка карточек с сервера
-
-loadCardsData()
-.then(res => {
-    res.forEach(item => {
-        const newCard = createCard(item);
-         cardsContainer.append(newCard);
-        })
-    })
-    .catch(err => {
-        console.log(err)
-    });
 
 // Включение валидации
     

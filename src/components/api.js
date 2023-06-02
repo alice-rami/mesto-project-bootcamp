@@ -64,4 +64,26 @@ const deleteCard = cardId => {
     .then(checkResponse);
 }
 
-export { loadUserData, loadCardsData, editUserData, addNewCard, deleteCard };
+const addLike = cardId => {
+    return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+        headers: config.headers,
+        method: 'PUT',
+        body: JSON.stringify({
+            _id: cardId
+        })
+    })
+    .then(checkResponse);
+}
+
+const removeLike = cardId => {
+    return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+        headers: config.headers,
+        method: 'DELETE',
+        body: JSON.stringify({
+            _id: cardId
+        })
+    })
+    .then(checkResponse);
+}
+
+export { loadUserData, loadCardsData, editUserData, addNewCard, deleteCard, addLike, removeLike };

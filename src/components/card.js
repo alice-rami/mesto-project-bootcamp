@@ -43,7 +43,7 @@ const viewImage = cardData => {
     openPopup(cardViewPopupElement);
 }
 
-export const createCardElement = (cardData, userId, handleDeleteCard) => {
+export const createCardElement = (cardData, userId, handleConfirmation) => {
     const newCard = cardTemplate.cloneNode(true);
     const newCardImage = newCard.querySelector('.card__image');
     const newCardLikeButton = newCard.querySelector('.card__like-button');
@@ -69,7 +69,7 @@ export const createCardElement = (cardData, userId, handleDeleteCard) => {
     if (cardData.owner._id === userId) {
         newCardRemoveButton.classList.add('card__remove-button_active');
         newCardRemoveButton.addEventListener('click', () => {
-            handleDeleteCard(cardData._id, () => removeCard(newCard))
+            handleConfirmation(cardData._id, () => removeCard(newCard))
         });
     }
     return newCard;

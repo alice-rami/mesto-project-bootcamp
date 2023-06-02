@@ -27,6 +27,10 @@ const cardAddFormElement = document.forms['place-form'];
 const cardTitleInput = cardAddFormElement.elements['place-title'];
 const cardLinkInput = cardAddFormElement.elements['place-link'];
 
+// Попап и форма для подтверждения удаления карточки
+const confirmPopupElement = document.querySelector('.popup_type_confirm-deletion');
+const confirmForm = document.forms['confirm-deletion-form'];
+
 // Поля профиля и кнопка редактирования профиля
 const profileElement = document.querySelector('.profile');
 const profileNameElement = profileElement.querySelector('.profile__name');
@@ -154,18 +158,30 @@ avatarEditButton.addEventListener('click', () => {
     openPopup(avatarPopupElement);
 });
 
-const handleDeleteCard = (cardId, deleteCardElement) => {
-    deleteCard(cardId)
-    .then(() => {
-        deleteCardElement();
-    })
-    .catch(err => {
-        console.log(err);
-    })
+const handleConfirmation = (cardId, deleteCardElement) => {
+    openPopup(confirmPopupElement);
+    
+    const handleDeleteCard = (evt) => {
+        evt.preventDefault();
+        
+        deleteCard(cardId)
+        .then(() => {
+            deleteCardElement();
+        })
+        .catch(err => {
+            console.log(err);
+        })
+        .finally(() => {
+            confirmForm.removeEventListener('submit', handleDeleteCard);
+            closePopup(confirmPopupElement);
+        })
+    }
+
+    confirmForm.addEventListener('submit', handleDeleteCard);
 }
 
 const createCard = res => {
-    const newCard = createCardElement(res, userId, handleDeleteCard);
+    const newCard = createCardElement(res, userId, handleConfirmation);
     return newCard;
 }
 

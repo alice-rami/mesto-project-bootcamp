@@ -13,8 +13,6 @@ const checkResponse = res => {
     return Promise.reject(`Ошибка: ${res.status}`);
 }
 
-// Загрузка информации о пользователе с сервера
-
 const loadUserData = () => {
     return fetch(`${config.baseUrl}/users/me`, {
         headers: config.headers

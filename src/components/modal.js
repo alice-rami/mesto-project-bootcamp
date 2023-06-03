@@ -1,9 +1,14 @@
 const popupsList = document.querySelectorAll('.popup');
+const popupCloseButtonsList = Array.from(document.querySelectorAll('.popup__close-icon'));
 
-export const closePopup = popup => {
+const closePopup = popup => {
     popup.classList.remove('popup_opened');
     document.removeEventListener('keydown', closeByEsc);
 }
+
+popupCloseButtonsList.forEach(item => {
+    item.addEventListener('click', () => closePopup(item.closest('.popup')))
+});
 
 const closeByEsc = (evt) => {
     if (evt.key === 'Escape') {
@@ -12,12 +17,12 @@ const closeByEsc = (evt) => {
     }
 }
 
-export const openPopup = popup => {
+const openPopup = popup => {
     popup.classList.add('popup_opened');
     document.addEventListener('keydown', closeByEsc);
 }
 
-export const closeByClickOnOverlay = (evt) => {
+const closeByClickOnOverlay = (evt) => {
     if (evt.target.classList.contains('popup')) {
         closePopup(evt.target);
     }
@@ -26,3 +31,5 @@ export const closeByClickOnOverlay = (evt) => {
 popupsList.forEach(popupElement => {
     popupElement.addEventListener('mousedown', closeByClickOnOverlay);
 });
+
+export { openPopup, closePopup };

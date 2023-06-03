@@ -17,7 +17,6 @@ let userId;
 const loader = 'Сохранение...'
 
 // Контейнер для создания карточки
-
 const cardsContainer = document.querySelector('.cards__list');
 
 // Кнопка, попап и форма и поля для добавления карточки
@@ -50,9 +49,6 @@ const avatarPopupElement = document.querySelector('.popup_type_edit-avatar');
 const avatarEditForm = document.forms['avatar-form'];
 const avatarLinkInput = avatarEditForm.elements['avatar-link'];
 
-// Списки для добавления слушателей
-const popupCloseButtonsList = Array.from(document.querySelectorAll('.popup__close-icon'));
-
 // Функции и добавление слушателей
 
 // Загрузка информации о пользователе с сервера
@@ -64,7 +60,6 @@ const renderUserData = res => {
 }
 
 // Загрузка карточек с сервера
-
 const renderCardsData = () => {
   loadCardsData()
     .then(res => {
@@ -84,28 +79,26 @@ loadUserData()
     .catch(err => {
         console.log(err);
     });
-
-const openProfilePopup = () => {
-    profileFormElement.reset();
-    profileNameInput.value = profileNameElement.textContent;
-    profileAboutInput.value = profileAboutElement.textContent;
-    openPopup(profilePopupElement);
-}
-
-profileEditButtonElement.addEventListener('click', openProfilePopup);
-
-// Сохранение...
-
+    
+// Сохранение...  
 const showLoader = (evt) => {
     evt.submitter.textContent = loader;
 }
-
+    
 const restoreButtonText = (evt, buttonText) => {
     evt.submitter.textContent = buttonText;
 }
     
 // Изменение данных профиля
+const openProfilePopup = () => {
+        profileFormElement.reset();
+        profileNameInput.value = profileNameElement.textContent;
+        profileAboutInput.value = profileAboutElement.textContent;
+        openPopup(profilePopupElement);
+}
 
+profileEditButtonElement.addEventListener('click', openProfilePopup);
+    
 const handleProfileFormSubmit = (evt) => {
     evt.preventDefault();
     const userData = {
@@ -130,7 +123,6 @@ const handleProfileFormSubmit = (evt) => {
 profileFormElement.addEventListener('submit', handleProfileFormSubmit);
 
 // Изменение аватара
-
 const handleEditAvatar = evt => {
     evt.preventDefault();
 
@@ -157,6 +149,7 @@ avatarEditButton.addEventListener('click', () => {
     openPopup(avatarPopupElement);
 });
 
+// Подтверждение удаления карточки
 const handleConfirmation = (cardId, deleteCardElement) => {
     openPopup(confirmPopupElement);
     
@@ -175,24 +168,19 @@ const handleConfirmation = (cardId, deleteCardElement) => {
             closePopup(confirmPopupElement);
         })
     }
-
     confirmForm.addEventListener('submit', handleDeleteCard);
 }
 
+// Создание и добавление карточки
 const createCard = res => {
     const newCard = createCardElement(res, userId, handleConfirmation);
     return newCard;
 }
 
-popupCloseButtonsList.forEach(item => {
-    item.addEventListener('click', () => closePopup(item.closest('.popup')))
-});
-
 cardAddButtonElement.addEventListener('click', () => {
     cardAddFormElement.reset();
     openPopup(cardAddPopupElement);
 });
-
 
 const handleCardAddFormSubmit = (evt) => {
     evt.preventDefault();
@@ -222,5 +210,4 @@ const handleCardAddFormSubmit = (evt) => {
 cardAddFormElement.addEventListener('submit', handleCardAddFormSubmit);
 
 // Включение валидации
-    
 enableValidation(settings);

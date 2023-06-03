@@ -24,7 +24,7 @@ const handleLikeButton = (likeButtonElement, cardId, likesCountElement) => {
         addLike(cardId)
         .then(res => {
             updateLikesCount(res.likes.length, likesCountElement);
-            likeButtonElement.classList.add('card__like-button_active')
+            likeButtonElement.classList.add('card__like-button_active');
         })
         .catch(err => {
             console.log(err);
@@ -43,24 +43,26 @@ const viewImage = cardData => {
     openPopup(cardViewPopupElement);
 }
 
-export const createCardElement = (cardData, userId, handleConfirmation) => {
+const createCardElement = (cardData, userId, handleConfirmation) => {
     const newCard = cardTemplate.cloneNode(true);
     const newCardImage = newCard.querySelector('.card__image');
+    const newCardTitle = newCard.querySelector('.card__title');
     const newCardLikeButton = newCard.querySelector('.card__like-button');
     const newCardRemoveButton = newCard.querySelector('.card__remove-button');
     const likesCountElement = newCard.querySelector('.card__likes-count');
     newCardImage.src = cardData.link;
     newCardImage.alt = cardData.name;
-    newCardImage.addEventListener('click', () => viewImage(cardData));
-    newCard.querySelector('.card__title').textContent = cardData.name;
+    newCardTitle.textContent = cardData.name;
     likesCountElement.textContent = cardData.likes.length;
-
+    
+    newCardImage.addEventListener('click', () => viewImage(cardData));
+    
     newCardLikeButton.addEventListener('click', () => {
         handleLikeButton(newCardLikeButton, cardData._id, likesCountElement)
     });
 
-    cardData.likes.forEach(item => {
-        if(item._id === userId) {
+    cardData.likes.forEach(user => {
+        if(user._id === userId) {
             newCardLikeButton.classList.add('card__like-button_active');
             return;
         }
@@ -74,3 +76,5 @@ export const createCardElement = (cardData, userId, handleConfirmation) => {
     }
     return newCard;
 }
+
+export { createCardElement };

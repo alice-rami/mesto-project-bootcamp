@@ -29,6 +29,7 @@ const cardLinkInput = cardAddFormElement.elements['place-link'];
 // Попап и форма для подтверждения удаления карточки
 const confirmPopupElement = document.querySelector('.popup_type_confirm-deletion');
 const confirmForm = document.forms['confirm-deletion-form'];
+const confirmPopupCloseButton = confirmPopupElement.querySelector('.popup__close-icon');
 
 // Поля профиля и кнопка редактирования профиля
 const profileElement = document.querySelector('.profile');
@@ -125,6 +126,7 @@ profileFormElement.addEventListener('submit', handleProfileFormSubmit);
 // Изменение аватара
 const handleEditAvatar = evt => {
     evt.preventDefault();
+    console.log(evt.type);
 
     const buttonText = evt.submitter.textContent;
     showLoader(evt);
@@ -150,26 +152,56 @@ avatarEditButton.addEventListener('click', () => {
 });
 
 // Подтверждение удаления карточки
+
+const checkConfirmation = (isConfirmed, cardId) => {
+    return new Promise((resolve, reject) => {
+        if(isConfirmed) {
+            resolve(deleteCard(cardId));
+        } else {
+            reject('Удаление отменено');
+        }
+    })
+}
+
 const handleConfirmation = (cardId, deleteCardElement) => {
     openPopup(confirmPopupElement);
+
+    const checkAction = evt => {
+        if (evt.type === 'click' || (evt.type === 'keydown' && evt.key === 'Escape') || (evt.type === 'mousedown' && evt.target.classList.contains('popup'))) {
+            checkConfirmation(false)
+            .catch(err => {
+                console.log(err);
+                document.removeEventListener('keydown', checkAction); 
+                confirmPopupElement.removeEventListener('mousedown', checkAction);
+                confirmPopupCloseButton.removeEventListener('click', checkAction);
+                confirmForm.removeEventListener('submit', checkAction);
+            })
+        }
+        if (evt.type === 'submit') {
+            evt.preventDefault();
+            checkConfirmation(true, cardId)
+            .then(() => {
+                deleteCardElement();
+            })
+            .catch(err => {
+                console.log(err);
+            })
+            .finally(() => {
+                closePopup(confirmPopupElement);
+                document.removeEventListener('keydown', checkAction); 
+                confirmPopupElement.removeEventListener('mousedown', checkAction);
+                confirmPopupCloseButton.removeEventListener('click', checkAction);
+                confirmForm.removeEventListener('submit', checkAction);
+            })
+        }
+        }
     
-    const handleDeleteCard = (evt) => {
-        evt.preventDefault();
-        
-        deleteCard(cardId)
-        .then(() => {
-            deleteCardElement();
-        })
-        .catch(err => {
-            console.log(err);
-        })
-        .finally(() => {
-            confirmForm.removeEventListener('submit', handleDeleteCard);
-            closePopup(confirmPopupElement);
-        })
-    }
-    confirmForm.addEventListener('submit', handleDeleteCard);
+    document.addEventListener('keydown', checkAction); 
+    confirmPopupElement.addEventListener('mousedown', checkAction);
+    confirmPopupCloseButton.addEventListener('click', checkAction);
+    confirmForm.addEventListener('submit', checkAction);
 }
+
 
 // Создание и добавление карточки
 const createCard = res => {

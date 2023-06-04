@@ -1,8 +1,0 @@
-.card__remove-button {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 18px;
-    height: 19px;
-    background-image: url(../../../images/remove-button.svg);
-}

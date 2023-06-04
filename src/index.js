@@ -126,7 +126,6 @@ profileFormElement.addEventListener('submit', handleProfileFormSubmit);
 // Изменение аватара
 const handleEditAvatar = evt => {
     evt.preventDefault();
-    console.log(evt.type);
 
     const buttonText = evt.submitter.textContent;
     showLoader(evt);
@@ -152,7 +151,6 @@ avatarEditButton.addEventListener('click', () => {
 });
 
 // Подтверждение удаления карточки
-
 const checkConfirmation = (isConfirmed, cardId) => {
     return new Promise((resolve, reject) => {
         if(isConfirmed) {
@@ -167,41 +165,37 @@ const handleConfirmation = (cardId, deleteCardElement) => {
     openPopup(confirmPopupElement);
 
     const checkAction = evt => {
+        let result;
         if (evt.type === 'click' || (evt.type === 'keydown' && evt.key === 'Escape') || (evt.type === 'mousedown' && evt.target.classList.contains('popup'))) {
-            checkConfirmation(false)
-            .catch(err => {
-                console.log(err);
-                document.removeEventListener('keydown', checkAction); 
-                confirmPopupElement.removeEventListener('mousedown', checkAction);
-                confirmPopupCloseButton.removeEventListener('click', checkAction);
-                confirmForm.removeEventListener('submit', checkAction);
-            })
+            result = false;
         }
         if (evt.type === 'submit') {
             evt.preventDefault();
-            checkConfirmation(true, cardId)
+            result = true;
+        }
+        if (result !== undefined) {
+            checkConfirmation(result, cardId)
             .then(() => {
                 deleteCardElement();
+                closePopup(confirmPopupElement);
             })
             .catch(err => {
                 console.log(err);
             })
             .finally(() => {
-                closePopup(confirmPopupElement);
                 document.removeEventListener('keydown', checkAction); 
                 confirmPopupElement.removeEventListener('mousedown', checkAction);
                 confirmPopupCloseButton.removeEventListener('click', checkAction);
                 confirmForm.removeEventListener('submit', checkAction);
             })
         }
-        }
+    }
     
     document.addEventListener('keydown', checkAction); 
     confirmPopupElement.addEventListener('mousedown', checkAction);
     confirmPopupCloseButton.addEventListener('click', checkAction);
     confirmForm.addEventListener('submit', checkAction);
 }
-
 
 // Создание и добавление карточки
 const createCard = res => {

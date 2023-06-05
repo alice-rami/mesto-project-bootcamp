@@ -1,4 +1,4 @@
-import { settings } from '../index.js';
+import { settings } from './constants.js';
 
 const showError = (input, errorMessage) => {
     const errorElement = document.querySelector(`#error-${input.id}`);
@@ -6,7 +6,7 @@ const showError = (input, errorMessage) => {
     input.classList.add(settings.inputInvalidSelector);
 }
 
-export const hideError = (input) => {
+const hideError = (input) => {
     const errorElement = document.querySelector(`#error-${input.id}`);
     errorElement.textContent = '';
     input.classList.remove(settings.inputInvalidSelector);
@@ -16,11 +16,11 @@ const enableButton = (submitButton) => {
     submitButton.disabled = false;
 }
 
-export const disableButton = (submitButton) => {
+const disableButton = (submitButton) => {
     submitButton.disabled = true;
 }
 
-export const checkInputValidity = (input) => {
+const checkInputValidity = (input) => {
     if (input.validity.valid) {
         hideError(input);
     } else {
@@ -28,7 +28,7 @@ export const checkInputValidity = (input) => {
     } 
 }
     
-export const checkFormValidity = (form, submitButton) => {
+const checkFormValidity = (form, submitButton) => {
     if (form.checkValidity()) {
         enableButton(submitButton);
     } else {
@@ -42,10 +42,8 @@ const setEventListeners = (form, settings) => {
     checkFormValidity(form, submitButtonElement);
     form.addEventListener('reset', () => {
         disableButton(submitButtonElement);
-        inputsList.forEach(inputElement => {
-            hideError(inputElement);
+        inputsList.forEach(hideError);
         });
-      });
     inputsList.forEach(inputField => {
         inputField.addEventListener('input', () => {
             checkInputValidity(inputField, settings);
@@ -60,3 +58,5 @@ export const enableValidation = (settings) => {
         setEventListeners(formElement, settings);
     });
 }
+
+export { hideError, disableButton, checkInputValidity, checkFormValidity };

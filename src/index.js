@@ -1,54 +1,14 @@
 import './pages/index.css';
+import { settings, cardsContainer, cardAddButtonElement, cardAddPopupElement, cardAddFormElement, cardTitleInput, cardLinkInput, confirmPopupElement, confirmForm, confirmPopupCloseButton, profileElement, profileNameElement,profileAboutElement, profileAvatarElement, profileEditButtonElement, profilePopupElement, profileFormElement, profileNameInput, profileAboutInput, avatarEditButton, avatarPopupElement, avatarEditForm, avatarLinkInput, popupsList, popupCloseButtonsList } from "./components/constants.js";
 import { enableValidation } from "./components/validate.js";
 import { createCardElement } from "./components/card.js";
-import { openPopup, closePopup } from "./components/modal.js";
+import { openPopup, closePopup, closeByClickOnOverlay } from "./components/modal.js";
 import { addNewCard, deleteCard, editUserData, loadCardsData, loadUserData, updateAvatar } from './components/api.js';
+import { showLoader, restoreButtonText } from './components/utils.js';
 
 // Переменные
 
-export const settings = {
-    formSelector: '.form',
-    inputSelector: '.form__input',
-    inputInvalidSelector: '.form__input_invalid',
-    submitButtonSelector: '.form__submit-button',
-}; 
-
 let userId;
-const loader = 'Сохранение...'
-
-// Контейнер для создания карточки
-const cardsContainer = document.querySelector('.cards__list');
-
-// Кнопка, попап и форма и поля для добавления карточки
-const cardAddButtonElement = document.querySelector('.profile__add-button');
-const cardAddPopupElement = document.querySelector('.popup_type_add-card');
-const cardAddFormElement = document.forms['place-form'];
-const cardTitleInput = cardAddFormElement.elements['place-title'];
-const cardLinkInput = cardAddFormElement.elements['place-link'];
-
-// Попап и форма для подтверждения удаления карточки
-const confirmPopupElement = document.querySelector('.popup_type_confirm-deletion');
-const confirmForm = document.forms['confirm-deletion-form'];
-const confirmPopupCloseButton = confirmPopupElement.querySelector('.popup__close-icon');
-
-// Поля профиля и кнопка редактирования профиля
-const profileElement = document.querySelector('.profile');
-const profileNameElement = profileElement.querySelector('.profile__name');
-const profileAboutElement = profileElement.querySelector('.profile__about');
-const profileAvatarElement = profileElement.querySelector('.profile__avatar');
-const profileEditButtonElement = profileElement.querySelector('.profile__edit-button');
-
-// Попап и форма для редактирования профиля
-const profilePopupElement = document.querySelector('.popup_type_profile');
-const profileFormElement = document.forms['profile-form'];
-const profileNameInput = profileFormElement.elements['profile-name'];
-const profileAboutInput = profileFormElement.elements['profile-about'];
-
-// Кнопка, попап и форма для изменения аватара
-const avatarEditButton = profileElement.querySelector('.profile__avatar-edit-button');
-const avatarPopupElement = document.querySelector('.popup_type_edit-avatar');
-const avatarEditForm = document.forms['avatar-form'];
-const avatarLinkInput = avatarEditForm.elements['avatar-link'];
 
 // Функции и добавление слушателей
 
@@ -66,29 +26,16 @@ const renderCardsData = () => {
     .then(res => {
         res.forEach(item => {
             const newCard = createCard(item);
-             cardsContainer.append(newCard);
+            cardsContainer.append(newCard);
             })
         })
-    .catch(err => {
-            console.log(err)
-    })
+    .catch(console.error)
 }
 
 loadUserData()
     .then(renderUserData)
     .then(renderCardsData)
-    .catch(err => {
-        console.log(err);
-    });
-    
-// Сохранение...  
-const showLoader = (evt) => {
-    evt.submitter.textContent = loader;
-}
-    
-const restoreButtonText = (evt, buttonText) => {
-    evt.submitter.textContent = buttonText;
-}
+    .catch(console.error);
     
 // Изменение данных профиля
 const openProfilePopup = () => {
@@ -111,12 +58,12 @@ const handleProfileFormSubmit = (evt) => {
     showLoader(evt);
     
     editUserData(userData)
-    .then(renderUserData)
-    .catch(err => {
-        console.log(err);
-    })
-    .finally(() => {
+    .then(res => {
+        renderUserData(res);
         closePopup(profilePopupElement);
+    })
+    .catch(console.error)
+    .finally(() => {
         restoreButtonText(evt, buttonText);
     })
 }
@@ -132,13 +79,11 @@ const handleEditAvatar = evt => {
 
     updateAvatar(avatarLinkInput.value)
     .then(res => {
-        profileAvatarElement.src = res.avatar;
-    })
-    .catch(err => {
-        console.log(err);
-    })
-    .finally(() => {
+        renderUserData(res);
         closePopup(avatarPopupElement);
+    })
+    .catch(console.error)
+    .finally(() => {
         restoreButtonText(evt, buttonText);
     })
 }
@@ -179,9 +124,7 @@ const handleConfirmation = (cardId, deleteCardElement) => {
                 deleteCardElement();
                 closePopup(confirmPopupElement);
             })
-            .catch(err => {
-                console.log(err);
-            })
+            .catch(console.error)
             .finally(() => {
                 document.removeEventListener('keydown', checkAction); 
                 confirmPopupElement.removeEventListener('mousedown', checkAction);
@@ -222,14 +165,11 @@ const handleCardAddFormSubmit = (evt) => {
     .then(res => {
         const newCard = createCard(res);
         cardsContainer.prepend(newCard);
-    })
-    .catch(err => {
-        console.log(err);
-    })
-    .finally(() => {
-        cardAddFormElement.reset();
-        restoreButtonText(evt, buttonText);
         closePopup(cardAddPopupElement);
+    })
+    .catch(console.error)
+    .finally(() => {
+        restoreButtonText(evt, buttonText);
     })
 }
 
@@ -237,3 +177,12 @@ cardAddFormElement.addEventListener('submit', handleCardAddFormSubmit);
 
 // Включение валидации
 enableValidation(settings);
+
+//
+popupCloseButtonsList.forEach(item => {
+    item.addEventListener('click', () => closePopup(item.closest('.popup')))
+});
+
+popupsList.forEach(popupElement => {
+    popupElement.addEventListener('mousedown', closeByClickOnOverlay);
+});

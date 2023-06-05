@@ -1,5 +1,5 @@
 import './pages/index.css';
-import { settings, cardsContainer, cardAddButtonElement, cardAddPopupElement, cardAddFormElement, cardTitleInput, cardLinkInput, confirmPopupElement, confirmForm, confirmPopupCloseButton, profileElement, profileNameElement,profileAboutElement, profileAvatarElement, profileEditButtonElement, profilePopupElement, profileFormElement, profileNameInput, profileAboutInput, avatarEditButton, avatarPopupElement, avatarEditForm, avatarLinkInput, popupsList, popupCloseButtonsList } from "./components/constants.js";
+import { settings, cardsContainer, cardAddButtonElement, cardAddPopupElement, cardAddFormElement, cardTitleInput, cardLinkInput, confirmPopupElement, confirmForm, profileNameElement,profileAboutElement, profileAvatarElement, profileEditButtonElement, profilePopupElement, profileFormElement, profileNameInput, profileAboutInput, avatarEditButton, avatarPopupElement, avatarEditForm, avatarLinkInput, popupsList, popupCloseButtonsList } from "./components/constants.js";
 import { enableValidation } from "./components/validate.js";
 import { createCardElement } from "./components/card.js";
 import { openPopup, closePopup, closeByClickOnOverlay } from "./components/modal.js";
@@ -8,6 +8,7 @@ import { addNewCard, deleteCard, editUserData, loadCardsData, loadUserData, upda
 // Переменные
 
 let userId;
+const cardForDeletion = {};
 
 // Функции и добавление слушателей
 
@@ -93,53 +94,37 @@ avatarEditButton.addEventListener('click', () => {
 });
 
 // Подтверждение удаления карточки
-const checkConfirmation = (isConfirmed, cardId) => {
+const checkConfirmation = (isConfirmed) => {
     return new Promise((resolve, reject) => {
         if(isConfirmed) {
-            resolve(deleteCard(cardId));
+            resolve(deleteCard(cardForDeletion.id));
         } else {
             reject('Удаление отменено');
         }
     })
 }
 
-const handleConfirmation = (cardId, deleteCardElement) => {
+const requestDeletion = (cardId, cardElement) => {
     openPopup(confirmPopupElement);
-
-    const checkAction = evt => {
-        let result;
-        if (evt.type === 'click' || (evt.type === 'keydown' && evt.key === 'Escape') || (evt.type === 'mousedown' && evt.target.classList.contains('popup'))) {
-            result = false;
-        }
-        if (evt.type === 'submit') {
-            evt.preventDefault();
-            result = true;
-        }
-        if (result !== undefined) {
-            checkConfirmation(result, cardId)
-            .then(() => {
-                deleteCardElement();
-                closePopup(confirmPopupElement);
-            })
-            .catch(console.error)
-            .finally(() => {
-                document.removeEventListener('keydown', checkAction); 
-                confirmPopupElement.removeEventListener('mousedown', checkAction);
-                confirmPopupCloseButton.removeEventListener('click', checkAction);
-                confirmForm.removeEventListener('submit', checkAction);
-            })
-        }
-    }
-    
-    document.addEventListener('keydown', checkAction); 
-    confirmPopupElement.addEventListener('mousedown', checkAction);
-    confirmPopupCloseButton.addEventListener('click', checkAction);
-    confirmForm.addEventListener('submit', checkAction);
+    cardForDeletion.id = cardId;
+    cardForDeletion.element = cardElement;
 }
+
+const handleDeletion = (evt) => {
+    evt.preventDefault();
+    checkConfirmation(true)
+        .then(() => {
+            cardForDeletion.element.remove();
+            closePopup(confirmPopupElement);
+        })
+        .catch(console.error)
+    }
+
+confirmForm.addEventListener('submit', handleDeletion);
 
 // Создание и добавление карточки
 const createCard = res => {
-    const newCard = createCardElement(res, userId, handleConfirmation);
+    const newCard = createCardElement(res, userId, requestDeletion);
     return newCard;
 }
 

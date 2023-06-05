@@ -20,21 +20,14 @@ const renderUserData = res => {
     userId = res._id;
 }
 
-// Загрузка карточек с сервера
-const renderCardsData = () => {
-  loadCardsData()
-    .then(res => {
-        res.forEach(item => {
-            const newCard = createCard(item);
+Promise.all([loadUserData(), loadCardsData()])
+    .then(([userData, cards]) => {
+        renderUserData(userData);
+        cards.forEach(card => {
+            const newCard = createCard(card);
             cardsContainer.append(newCard);
-            })
         })
-    .catch(console.error)
-}
-
-loadUserData()
-    .then(renderUserData)
-    .then(renderCardsData)
+    })
     .catch(console.error);
     
 // Изменение данных профиля

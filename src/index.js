@@ -4,7 +4,6 @@ import { enableValidation } from "./components/validate.js";
 import { createCardElement } from "./components/card.js";
 import { openPopup, closePopup, closeByClickOnOverlay } from "./components/modal.js";
 import { addNewCard, deleteCard, editUserData, loadCardsData, loadUserData, updateAvatar } from './components/api.js';
-import { showLoader, restoreButtonText } from './components/utils.js';
 
 // Переменные
 
@@ -20,65 +19,70 @@ const renderUserData = res => {
     userId = res._id;
 }
 
+// Создание и отображение карточки
+const renderCard = card => {
+    const newCard = createCard(card);
+    cardsContainer.prepend(newCard);
+};
+
 Promise.all([loadUserData(), loadCardsData()])
     .then(([userData, cards]) => {
         renderUserData(userData);
-        cards.forEach(card => {
-            const newCard = createCard(card);
-            cardsContainer.append(newCard);
-        })
+        cards.forEach(renderCard);
     })
     .catch(console.error);
-    
+
+// Сохранение...
+const renderLoading = (isLoading, button, buttonText='Сохранить', loadingText='Сохранение...') => {
+    button.textContent = isLoading ? loadingText : buttonText;
+}
+
+// Универсальная функция обработки сабмита
+const handleSubmit = (request, evt, loadingText = 'Сохранение...') => {
+    evt.preventDefault();
+    const submitButton = evt.submitter;
+    const initialText = submitButton.textContent;
+    renderLoading(true, submitButton, initialText, loadingText);
+
+    request()
+    .then(() => {
+        evt.target.reset();
+        closePopup(evt.target.closest('.popup'));
+    })
+    .catch(console.error)
+    .finally(() => {
+        renderLoading(false, submitButton, initialText);
+    });
+}
+
 // Изменение данных профиля
 const openProfilePopup = () => {
-        profileFormElement.reset();
-        profileNameInput.value = profileNameElement.textContent;
-        profileAboutInput.value = profileAboutElement.textContent;
-        openPopup(profilePopupElement);
+    profileNameInput.value = profileNameElement.textContent;
+    profileAboutInput.value = profileAboutElement.textContent;
+    openPopup(profilePopupElement);
 }
 
 profileEditButtonElement.addEventListener('click', openProfilePopup);
-    
-const handleProfileFormSubmit = (evt) => {
-    evt.preventDefault();
-    const userData = {
-        name: profileNameInput.value,
-        about: profileAboutInput.value
-    };
 
-    const buttonText = evt.submitter.textContent;
-    showLoader(evt);
-    
-    editUserData(userData)
-    .then(res => {
-        renderUserData(res);
-        closePopup(profilePopupElement);
-    })
-    .catch(console.error)
-    .finally(() => {
-        restoreButtonText(evt, buttonText);
-    })
+const handleProfileSubmit = evt => {
+    const makeRequest = () => {
+        const userData = {
+            name: profileNameInput.value,
+            about: profileAboutInput.value
+        };
+        return editUserData(userData).then(renderUserData);
+    }
+    handleSubmit(makeRequest, evt);
 }
 
-profileFormElement.addEventListener('submit', handleProfileFormSubmit);
+profileFormElement.addEventListener('submit', handleProfileSubmit);
 
 // Изменение аватара
 const handleEditAvatar = evt => {
-    evt.preventDefault();
-
-    const buttonText = evt.submitter.textContent;
-    showLoader(evt);
-
-    updateAvatar(avatarLinkInput.value)
-    .then(res => {
-        renderUserData(res);
-        closePopup(avatarPopupElement);
-    })
-    .catch(console.error)
-    .finally(() => {
-        restoreButtonText(evt, buttonText);
-    })
+    const makeRequest = () => {
+        return updateAvatar(avatarLinkInput.value).then(renderUserData);
+    }
+    handleSubmit(makeRequest, evt);
 }
 
 avatarEditForm.addEventListener('submit', handleEditAvatar);
@@ -144,34 +148,22 @@ cardAddButtonElement.addEventListener('click', () => {
     openPopup(cardAddPopupElement);
 });
 
-const handleCardAddFormSubmit = (evt) => {
-    evt.preventDefault();
-    const cardData = {
-        name: cardTitleInput.value, 
-        link: cardLinkInput.value
-    };
-
-    const buttonText = evt.submitter.textContent;
-    showLoader(evt);
-
-    addNewCard(cardData)
-    .then(res => {
-        const newCard = createCard(res);
-        cardsContainer.prepend(newCard);
-        closePopup(cardAddPopupElement);
-    })
-    .catch(console.error)
-    .finally(() => {
-        restoreButtonText(evt, buttonText);
-    })
+const cardAddSubmit = evt => {
+    const makeRequest = () => {
+        const cardData = {
+            name: cardTitleInput.value, 
+            link: cardLinkInput.value
+        };
+        return addNewCard(cardData).then(renderCard);
+    }
+    handleSubmit(makeRequest, evt);
 }
 
-cardAddFormElement.addEventListener('submit', handleCardAddFormSubmit);
+cardAddFormElement.addEventListener('submit', cardAddSubmit);
 
 // Включение валидации
 enableValidation(settings);
 
-//
 popupCloseButtonsList.forEach(item => {
     item.addEventListener('click', () => closePopup(item.closest('.popup')))
 });

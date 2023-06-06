@@ -18,7 +18,6 @@ const cardLinkInput = cardAddFormElement.elements['place-link'];
 // Попап и форма для подтверждения удаления карточки
 const confirmPopupElement = document.querySelector('.popup_type_confirm-deletion');
 const confirmForm = document.forms['confirm-deletion-form'];
-const confirmPopupCloseButton = confirmPopupElement.querySelector('.popup__close-icon');
 
 // Поля профиля и кнопка редактирования профиля
 const profileElement = document.querySelector('.profile');

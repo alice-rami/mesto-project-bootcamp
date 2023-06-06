@@ -32,10 +32,6 @@ const handleLikeButton = (likeButtonElement, cardId, likesCountElement) => {
     }
 }
 
-const removeCard = cardElement => {
-    cardElement.remove();
-}
-
 const viewImage = cardData => {
     targetImageElement.src = cardData.link;
     targetImageElement.alt = cardData.name;

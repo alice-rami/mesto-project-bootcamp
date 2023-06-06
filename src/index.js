@@ -4,6 +4,7 @@ import { enableValidation } from "./components/validate.js";
 import { createCardElement } from "./components/card.js";
 import { openPopup, closePopup, closeByClickOnOverlay } from "./components/modal.js";
 import { addNewCard, deleteCard, editUserData, loadCardsData, loadUserData, updateAvatar } from './components/api.js';
+import { renderLoading } from './components/utils.js';
 
 // Переменные
 
@@ -12,7 +13,7 @@ const cardForDeletion = {};
 
 // Функции и добавление слушателей
 
-// Загрузка информации о пользователе с сервера
+// Загрузка информации о пользователе и карточках с сервера
 const renderUserData = res => {
     profileNameElement.textContent = res.name;
     profileAboutElement.textContent = res.about;
@@ -20,7 +21,6 @@ const renderUserData = res => {
     userId = res._id;
 }
 
-// Создание и отображение карточки
 const renderCard = card => {
     const newCard = createCard(card);
     cardsContainer.prepend(newCard);
@@ -32,11 +32,6 @@ Promise.all([loadUserData(), loadCardsData()])
         cards.forEach(renderCard);
     })
     .catch(console.error);
-
-// Сохранение...
-const renderLoading = (isLoading, button, buttonText='Сохранить', loadingText='Сохранение...') => {
-    button.textContent = isLoading ? loadingText : buttonText;
-}
 
 // Универсальная функция обработки сабмита
 const handleSubmit = (request, evt, loadingText = 'Сохранение...') => {

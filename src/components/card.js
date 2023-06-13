@@ -11,25 +11,15 @@ const updateLikesCount = (likesCount, likesCountElement) => {
 }
 
 const handleLikeButton = (likeButtonElement, cardId, likesCountElement) => {
-    if (likeButtonElement.classList.contains('card__like-button_active')) {
-        removeLike(cardId)
+    let isLiked = likeButtonElement.classList.contains('card__like-button_active');
+    (isLiked ? removeLike(cardId) : addLike(cardId))
         .then(res => {
             updateLikesCount(res.likes.length, likesCountElement);
-            likeButtonElement.classList.remove('card__like-button_active');
+            likeButtonElement.classList.toggle('card__like-button_active');
         })
         .catch(err => {
             console.log(err);
         })
-    } else {
-        addLike(cardId)
-        .then(res => {
-            updateLikesCount(res.likes.length, likesCountElement);
-            likeButtonElement.classList.add('card__like-button_active');
-        })
-        .catch(err => {
-            console.log(err);
-        })
-    }
 }
 
 const viewImage = cardData => {

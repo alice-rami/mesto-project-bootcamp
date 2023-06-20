@@ -42,4 +42,9 @@ const avatarLinkInput = avatarEditForm.elements['avatar-link'];
 const popupsList = document.querySelectorAll('.popup');
 const popupCloseButtonsList = Array.from(document.querySelectorAll('.popup__close-icon'));
 
-export { settings, cardsContainer, cardAddButtonElement, cardAddPopupElement, cardAddFormElement, cardTitleInput, cardLinkInput, confirmPopupElement, confirmForm, profileNameElement,profileAboutElement, profileAvatarElement, profileEditButtonElement, profilePopupElement, profileFormElement, profileNameInput, profileAboutInput, avatarEditButton, avatarPopupElement, avatarEditForm, avatarLinkInput, popupsList, popupCloseButtonsList };
+// Попап для просмотра страницы
+const cardViewPopupElement = document.querySelector('.popup_type_view-image');
+const targetImageElement = cardViewPopupElement.querySelector('.view-template__image');
+const targetImageTitleElement = cardViewPopupElement.querySelector('.view-template__title');
+
+export { settings, cardsContainer, cardAddButtonElement, cardAddPopupElement, cardAddFormElement, cardTitleInput, cardLinkInput, confirmPopupElement, confirmForm, profileNameElement,profileAboutElement, profileAvatarElement, profileEditButtonElement, profilePopupElement, profileFormElement, profileNameInput, profileAboutInput, avatarEditButton, avatarPopupElement, avatarEditForm, avatarLinkInput, popupsList, popupCloseButtonsList, cardViewPopupElement, targetImageElement, targetImageTitleElement };

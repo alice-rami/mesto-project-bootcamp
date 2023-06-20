@@ -1,11 +1,12 @@
 import './pages/index.css';
-import { settings, cardsContainer, cardAddButtonElement, cardAddPopupElement, cardAddFormElement, cardTitleInput, cardLinkInput, confirmPopupElement, confirmForm, profileNameElement,profileAboutElement, profileAvatarElement, profileEditButtonElement, profilePopupElement, profileFormElement, profileNameInput, profileAboutInput, avatarEditButton, avatarPopupElement, avatarEditForm, avatarLinkInput, popupsList, popupCloseButtonsList } from "./components/constants.js";
+import { settings, cardsContainer, cardAddButtonElement, cardAddPopupElement, cardAddFormElement, cardTitleInput, cardLinkInput, confirmPopupElement, confirmForm, profileNameElement,profileAboutElement, profileAvatarElement, profileEditButtonElement, profilePopupElement, profileFormElement, profileNameInput, profileAboutInput, avatarEditButton, avatarPopupElement, avatarEditForm, avatarLinkInput, popupsList, popupCloseButtonsList, cardViewPopupElement, targetImageElement, targetImageTitleElement } from "./components/constants.js";
 import { enableValidation } from "./components/validate.js";
-import { createCardElement } from "./components/card.js";
+// import { createCardElement } from "./components/card_old.js";
 import { openPopup, closePopup, closeByClickOnOverlay } from "./components/modal.js";
 // import { addNewCard, deleteCard, editUserData, loadCardsData, loadUserData, updateAvatar } from './components/Api.js';
 import { renderLoading } from './components/utils.js';
 import Api from "./components/Api.js";
+import Card from './components/Card.js';
 
 // Переменные
 
@@ -14,13 +15,25 @@ const cardForDeletion = {};
 
 
 // создании экз класса
-export const api = new Api({
+const api = new Api({
     baseUrl: 'https://nomoreparties.co/v1/wbf-cohort-9',
     headers: {
         authorization: 'c1d6c920-f67e-42f9-9dd3-963993549d9b',
         'Content-Type': 'application/json'
     }
 });
+
+const handleCardClick = ({name, link}) => {
+    console.log(link);
+    targetImageElement.src = link;
+    targetImageElement.alt = name;
+    targetImageTitleElement.textContent = name;
+    openPopup(cardViewPopupElement);
+}
+
+const handleLikeClick = (isLiked, cardId) => {
+    return isLiked ? api.removeLike(cardId) : api.addLike(cardId);
+}
 
 // Функции и добавление слушателей
 
@@ -32,8 +45,9 @@ const renderUserData = res => {
     userId = res._id;
 }
 
-const renderCard = card => {
-    const newCard = createCard(card);
+const renderCard = (cardData) => {
+    const newCardElement = new Card(cardData, 'card__template', userId, handleLikeClick, handleCardClick, requestDeletion);
+    const newCard = newCardElement.createCardElement();
     cardsContainer.prepend(newCard);
 };
 

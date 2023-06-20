@@ -7,6 +7,8 @@ import Card from './components/Card1.js';
 import FormValidator from './components/FormValidator.js';
 import UserInfo from './components/UserInfo.js';
 import Section from './components/Section.js';
+import PopupWithImage from './components/PopupWithImage';
+import Popup from './components/Popup';
 
 // Переменные
 
@@ -23,11 +25,10 @@ const api = new Api({
     }
 });
 
-const handleCardClick = ({name, link}) => {
-    targetImageElement.src = link;
-    targetImageElement.alt = name;
-    targetImageTitleElement.textContent = name;
-    openPopup(cardViewPopupElement);
+const popupViewImage = new PopupWithImage('.popup_type_view-image', '.view-template__title', '.view-template__image');
+
+const handleCardClick = (cardData) => {
+    popupViewImage.open(cardData);
 }
 
 const handleLikeClick = (isLiked, cardId) => {

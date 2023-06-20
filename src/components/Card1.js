@@ -47,14 +47,12 @@ export default class Card {
     }
 
     _handleLikeButton() {
-        console.log('after click before request: ', this._isLiked);
         this._handleLikeClick(this._isLiked, this._cardId)
             .then(res => {
                 this._likes = res.likes;
                 this._likesCount = res.likes.length;
                 this._elementLikesCount.textContent = this._likesCount;
                 this._setLikeButtonState();
-                console.log('after request: ', this._isLiked);
             })
             .catch(err => {
                 console.log(err);
@@ -77,7 +75,6 @@ export default class Card {
         this._elementTitle.textContent = this._name;
         this._elementLikesCount.textContent = this._likesCount;
         this._setLikeButtonState();
-        console.log('init: ', this._isLiked);
         this._setRemoveButtonState();       
         this._setEventListeners();
         

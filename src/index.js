@@ -3,13 +3,24 @@ import { settings, cardsContainer, cardAddButtonElement, cardAddPopupElement, ca
 import { enableValidation } from "./components/validate.js";
 import { createCardElement } from "./components/card.js";
 import { openPopup, closePopup, closeByClickOnOverlay } from "./components/modal.js";
-import { addNewCard, deleteCard, editUserData, loadCardsData, loadUserData, updateAvatar } from './components/api.js';
+// import { addNewCard, deleteCard, editUserData, loadCardsData, loadUserData, updateAvatar } from './components/Api.js';
 import { renderLoading } from './components/utils.js';
+import Api from "./components/Api.js";
 
 // Переменные
 
 let userId;
 const cardForDeletion = {};
+
+
+// создании экз класса
+export const api = new Api({
+    baseUrl: 'https://nomoreparties.co/v1/wbf-cohort-9',
+    headers: {
+        authorization: 'c1d6c920-f67e-42f9-9dd3-963993549d9b',
+        'Content-Type': 'application/json'
+    }
+});
 
 // Функции и добавление слушателей
 
@@ -26,7 +37,7 @@ const renderCard = card => {
     cardsContainer.prepend(newCard);
 };
 
-Promise.all([loadUserData(), loadCardsData()])
+Promise.all([api.loadUserData(), api.loadCardsData()])
     .then(([userData, cards]) => {
         renderUserData(userData);
         cards.forEach(renderCard);
@@ -66,7 +77,7 @@ const handleProfileSubmit = evt => {
             name: profileNameInput.value,
             about: profileAboutInput.value
         };
-        return editUserData(userData).then(renderUserData);
+        return api.editUserData(userData).then(renderUserData);
     }
     handleSubmit(makeRequest, evt);
 }
@@ -76,7 +87,7 @@ profileFormElement.addEventListener('submit', handleProfileSubmit);
 // Изменение аватара
 const handleEditAvatar = evt => {
     const makeRequest = () => {
-        return updateAvatar(avatarLinkInput.value).then(renderUserData);
+        return api.updateAvatar(avatarLinkInput.value).then(renderUserData);
     }
     handleSubmit(makeRequest, evt);
 }
@@ -92,7 +103,7 @@ avatarEditButton.addEventListener('click', () => {
 const checkConfirmation = (isConfirmed) => {
     return new Promise((resolve, reject) => {
         if(isConfirmed) {
-            resolve(deleteCard(cardForDeletion.id));
+            resolve(api.deleteCard(cardForDeletion.id));
         } else {
             reject('Удаление отменено');
         }
@@ -134,7 +145,7 @@ const cardAddSubmit = evt => {
             name: cardTitleInput.value, 
             link: cardLinkInput.value
         };
-        return addNewCard(cardData).then(renderCard);
+        return api.addNewCard(cardData).then(renderCard);
     }
     handleSubmit(makeRequest, evt);
 }

@@ -1,4 +1,5 @@
-import { addLike, removeLike } from "./api.js";
+import { api } from "../index.js";
+// import { addLike, removeLike } from "./Api.js";
 import { openPopup } from "./modal.js";
 
 const cardTemplate = document.getElementById('card__template').content.querySelector('.card');
@@ -12,7 +13,8 @@ const updateLikesCount = (likesCount, likesCountElement) => {
 
 const handleLikeButton = (likeButtonElement, cardId, likesCountElement) => {
     let isLiked = likeButtonElement.classList.contains('card__like-button_active');
-    (isLiked ? removeLike(cardId) : addLike(cardId))
+    // TODO: убрать из Card!!!
+    (isLiked ? api.removeLike(cardId) : api.addLike(cardId))
         .then(res => {
             updateLikesCount(res.likes.length, likesCountElement);
             likeButtonElement.classList.toggle('card__like-button_active');

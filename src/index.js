@@ -1,12 +1,12 @@
 import './pages/index.css';
 import { settings, cardsContainer, cardAddButtonElement, cardAddPopupElement, cardAddFormElement, cardTitleInput, cardLinkInput, confirmPopupElement, confirmForm, profileNameElement,profileAboutElement, profileAvatarElement, profileEditButtonElement, profilePopupElement, profileFormElement, profileNameInput, profileAboutInput, avatarEditButton, avatarPopupElement, avatarEditForm, avatarLinkInput, popupsList, popupCloseButtonsList, cardViewPopupElement, targetImageElement, targetImageTitleElement } from "./components/constants.js";
-import { enableValidation } from "./components/validate.js";
-// import { createCardElement } from "./components/card_old.js";
 import { openPopup, closePopup, closeByClickOnOverlay } from "./components/modal.js";
-// import { addNewCard, deleteCard, editUserData, loadCardsData, loadUserData, updateAvatar } from './components/Api.js';
 import { renderLoading } from './components/utils.js';
 import Api from "./components/Api.js";
-import Card from './components/Card.js';
+import Card from './components/Card1.js';
+import FormValidator from './components/FormValidator.js';
+import UserInfo from './components/UserInfo.js';
+import Section from './components/Section.js';
 
 // Переменные
 
@@ -24,7 +24,6 @@ const api = new Api({
 });
 
 const handleCardClick = ({name, link}) => {
-    console.log(link);
     targetImageElement.src = link;
     targetImageElement.alt = name;
     targetImageTitleElement.textContent = name;
@@ -38,6 +37,9 @@ const handleLikeClick = (isLiked, cardId) => {
 // Функции и добавление слушателей
 
 // Загрузка информации о пользователе и карточках с сервера
+
+// const userInfo = new UserInfo({name: '.profile__name', about: '.profile__about', avatar: '.profile__avatar'}, userData, api.editUserData);
+
 const renderUserData = res => {
     profileNameElement.textContent = res.name;
     profileAboutElement.textContent = res.about;
@@ -45,20 +47,45 @@ const renderUserData = res => {
     userId = res._id;
 }
 
-const renderCard = (cardData) => {
+const requestDeletion = (cardId, cardElement) => {
+    openPopup(confirmPopupElement);
+    cardForDeletion.id = cardId;
+    cardForDeletion.element = cardElement;
+}
+
+const generateCard = (cardData) => {
     const newCardElement = new Card(cardData, 'card__template', userId, handleLikeClick, handleCardClick, requestDeletion);
-    const newCard = newCardElement.createCardElement();
-    cardsContainer.prepend(newCard);
+    return newCardElement.createCardElement();
 };
 
+const cardsList = new Section({
+    items: [],
+    renderer: (item) => {
+        const newCard = generateCard(item);
+        cardsList.addItem(newCard);
+        }
+    },
+    '.cards__list');
+
 Promise.all([api.loadUserData(), api.loadCardsData()])
-    .then(([userData, cards]) => {
-        renderUserData(userData);
-        cards.forEach(renderCard);
-    })
-    .catch(console.error);
+.then(([userData, cards]) => {
+    renderUserData(userData);
+    cardsList.setItems(cards);
+    cardsList.renderItems();
+})
+.catch(console.error);
+
+
+
+
+// const formsList = Array.from(document.forms)
+// formsList.forEach(formElement => {
+//     const validator = new FormValidator(settings, formElement);
+//     validator.enableValidation();
+// });
 
 // Универсальная функция обработки сабмита
+
 const handleSubmit = (request, evt, loadingText = 'Сохранение...') => {
     evt.preventDefault();
     const submitButton = evt.submitter;
@@ -124,11 +151,7 @@ const checkConfirmation = (isConfirmed) => {
     })
 }
 
-const requestDeletion = (cardId, cardElement) => {
-    openPopup(confirmPopupElement);
-    cardForDeletion.id = cardId;
-    cardForDeletion.element = cardElement;
-}
+
 
 const handleDeletion = (evt) => {
     evt.preventDefault();
@@ -159,7 +182,11 @@ const cardAddSubmit = evt => {
             name: cardTitleInput.value, 
             link: cardLinkInput.value
         };
-        return api.addNewCard(cardData).then(renderCard);
+        
+        return api.addNewCard(cardData).then((res) => {
+            const cardElement = generateCard(res);
+            cardsList.addItem(cardElement)
+        });
     }
     handleSubmit(makeRequest, evt);
 }
@@ -167,7 +194,7 @@ const cardAddSubmit = evt => {
 cardAddFormElement.addEventListener('submit', cardAddSubmit);
 
 // Включение валидации
-enableValidation(settings);
+// enableValidation(settings);
 
 popupCloseButtonsList.forEach(item => {
     item.addEventListener('click', () => closePopup(item.closest('.popup')))

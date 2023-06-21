@@ -19,8 +19,8 @@ export default class Popup {
             this.close();
         });
 
-        this._popup.addEventListener('mousedown', () => {
-            this._closeByClickOnOverlay();
+        this._popup.addEventListener('mousedown', (evt) => {
+            this._closeByClickOnOverlay(evt);
         });
             
     }
@@ -33,7 +33,7 @@ export default class Popup {
 
     _closeByClickOnOverlay(evt) {
         if (evt.target.classList.contains('popup')) {
-            closePopup(evt.target);
+            this.close(evt.target);
         }
     }
 }

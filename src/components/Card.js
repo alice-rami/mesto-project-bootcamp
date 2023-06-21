@@ -18,6 +18,10 @@ export default class Card {
         return cardElement;
     }
 
+    _getCardData() {
+        return {name: this._name, link: this._link};
+    }
+
     _setLikeButtonState() {
         this._isLiked = this._likes.some(user => user._id === this._userId);
         this._elementLikeButton.classList.toggle('card__like-button_active', this._isLiked);
@@ -32,7 +36,7 @@ export default class Card {
     
     _setEventListeners() {
         this._elementImage.addEventListener('click', () => {
-            this._viewImage()
+            this._handleCardClick(this._getCardData());
         });
         
         this._elementLikeButton.addEventListener('click', () => {
@@ -59,9 +63,6 @@ export default class Card {
             })
     }
     
-    _viewImage() {
-        this._handleCardClick({name: this._name, link: this._link});
-    }
     
     createCardElement() {
         this._element = this._getCardElement();

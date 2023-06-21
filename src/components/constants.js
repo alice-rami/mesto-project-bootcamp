@@ -13,6 +13,12 @@ const apiRequestConfig = {
     }
 }
 
+const profileSelectors = {
+    nameSelector: '.profile__name',
+    aboutSelector: '.profile__about',
+    avatarSelector: '.profile__avatar'
+}
+
 // Контейнер для создания карточки
 const cardsContainer = document.querySelector('.cards__list');
 
@@ -55,4 +61,4 @@ const cardViewPopupElement = document.querySelector('.popup_type_view-image');
 const targetImageElement = cardViewPopupElement.querySelector('.view-template__image');
 const targetImageTitleElement = cardViewPopupElement.querySelector('.view-template__title');
 
-export { settings, apiRequestConfig, cardsContainer, cardAddButtonElement, cardAddPopupElement, cardAddFormElement, cardTitleInput, cardLinkInput, confirmPopupElement, confirmForm, profileNameElement,profileAboutElement, profileAvatarElement, profileEditButtonElement, profilePopupElement, profileFormElement, profileNameInput, profileAboutInput, avatarEditButton, avatarPopupElement, avatarEditForm, avatarLinkInput, popupsList, popupCloseButtonsList, cardViewPopupElement, targetImageElement, targetImageTitleElement };
+export { settings, apiRequestConfig, profileSelectors, cardsContainer, cardAddButtonElement, cardAddPopupElement, cardAddFormElement, cardTitleInput, cardLinkInput, confirmPopupElement, confirmForm, profileNameElement,profileAboutElement, profileAvatarElement, profileEditButtonElement, profilePopupElement, profileFormElement, profileNameInput, profileAboutInput, avatarEditButton, avatarPopupElement, avatarEditForm, avatarLinkInput, popupsList, popupCloseButtonsList, cardViewPopupElement, targetImageElement, targetImageTitleElement };

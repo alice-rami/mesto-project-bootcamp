@@ -1,5 +1,5 @@
 import './pages/index.css';
-import { settings, apiRequestConfig, cardsContainer, cardAddButtonElement, cardAddPopupElement, cardAddFormElement, cardTitleInput, cardLinkInput, confirmPopupElement, confirmForm, profileNameElement,profileAboutElement, profileAvatarElement, profileEditButtonElement, profilePopupElement, profileFormElement, profileNameInput, profileAboutInput, avatarEditButton, avatarPopupElement, avatarEditForm, avatarLinkInput, popupsList, popupCloseButtonsList, cardViewPopupElement, targetImageElement, targetImageTitleElement } from "./components/constants.js";
+import { settings, apiRequestConfig, profileSelectors, cardsContainer, cardAddButtonElement, cardAddPopupElement, cardAddFormElement, cardTitleInput, cardLinkInput, confirmPopupElement, confirmForm, profileNameElement,profileAboutElement, profileAvatarElement, profileEditButtonElement, profilePopupElement, profileFormElement, profileNameInput, profileAboutInput, avatarEditButton, avatarPopupElement, avatarEditForm, avatarLinkInput, popupsList, popupCloseButtonsList, cardViewPopupElement, targetImageElement, targetImageTitleElement } from "./components/constants.js";
 import { openPopup, closePopup, closeByClickOnOverlay } from "./components/modal.js";
 import { renderLoading } from './components/utils.js';
 import Api from "./components/Api.js";
@@ -15,18 +15,14 @@ import PopupWithForm from './components/PopupWithForm.js';
 let userId;
 const cardForDeletion = {};
 
+
 // создании экз класса
 const api = new Api(apiRequestConfig);
 
+const userInfo = new UserInfo(profileSelectors, {});
+
 const popupViewImage = new PopupWithImage('.popup_type_view-image', '.view-template__title', '.view-template__image');
 popupViewImage.setEventListeners();
-
-const renderUserData = res => {
-    profileNameElement.textContent = res.name;
-    profileAboutElement.textContent = res.about;
-    profileAvatarElement.src = res.avatar;
-    userId = res._id;
-}
 
 const handleSubmit = (request, evt, loadingText = 'Сохранение...') => {
     evt.preventDefault();
@@ -48,14 +44,18 @@ const handleSubmit = (request, evt, loadingText = 'Сохранение...') => 
 const handleProfileSubmit = (evt, userData) => {
     console.log(userData);
     const makeRequest = () => {
-        return api.editUserData(userData).then(renderUserData);
+        return api.editUserData(userData).then((res) => {
+            userInfo.setUserInfo(userInfo.getUserInfo(res));
+        })
     }
     handleSubmit(makeRequest, evt);
 }
 
 const handleEditAvatar = (evt, {avatar}) => {
     const makeRequest = () => {
-        return api.updateAvatar(avatar).then(renderUserData);
+        return api.updateAvatar(avatar).then((res) => {
+            userInfo.setUserInfo(userInfo.getUserInfo(res));
+        })
     }
     handleSubmit(makeRequest, evt);
 }
@@ -132,7 +132,8 @@ const cardsList = new Section({
 
 Promise.all([api.loadUserData(), api.loadCardsData()])
 .then(([userData, cards]) => {
-    renderUserData(userData);
+    userInfo.getUserInfo(userData);
+    userInfo.setUserInfo(userData);
     cardsList.setItems(cards);
     cardsList.renderItems();
 })

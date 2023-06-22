@@ -1,5 +1,5 @@
 import './pages/index.css';
-import { validationSelectors, apiRequestConfig, profileSelectors, cardAddButtonElement, cardAddForm, confirmForm,profileEditButtonElement, profileForm, avatarEditButton, avatarEditForm, loadingText } from "./components/constants.js";
+import { validationSelectors, apiRequestConfig, profileSelectors, confirmForm, loadingText, popupOpenButtons } from "./components/constants.js";
 import Api from "./components/Api.js";
 import Card from './components/Card.js';
 import FormValidator from './components/FormValidator.js';
@@ -31,18 +31,18 @@ const handleSubmit = (request, popup, evt) => {
     });
 }
 
-const handleProfileSubmit = (evt, userData) => {
+const handleProfileSubmit = (evt, userData, popup) => {
     const makeRequest = () => {
         return api.editUserData(userData).then((res) => userInfo.setUserInfo(userInfo.updateUserInfo(res)));
     }
-    handleSubmit(makeRequest, popupEditProfile, evt);
+    handleSubmit(makeRequest, popup, evt);
 }
 
-const handleEditAvatar = (evt, {avatar}) => {
+const handleEditAvatar = (evt, {avatar}, popup) => {
     const makeRequest = () => {
         return api.updateAvatar(avatar).then((res) => userInfo.setUserInfo(userInfo.updateUserInfo(res)));
     }
-    handleSubmit(makeRequest, popupEditAvatar, evt);
+    handleSubmit(makeRequest, popup, evt);
 }
 
 const generateCard = (cardData) => {
@@ -50,14 +50,14 @@ const generateCard = (cardData) => {
     return newCardElement.createCardElement();
 };
 
-const cardAddSubmit = (evt, cardData) => {
+const cardAddSubmit = (evt, cardData, popup) => {
     const makeRequest = () => {     
         return api.addNewCard(cardData).then((res) => {
             const cardElement = generateCard(res);
             cardsList.addItem(cardElement)
         });
     }
-    handleSubmit(makeRequest, popupAddCard, evt);
+    handleSubmit(makeRequest, popup, evt);
 }
 
 const handleDeletionRequest = (cardId, cardElement) => {
@@ -76,15 +76,6 @@ const handleDeletion = (evt) => {
         })
         .catch(console.error)
     }
-
-const popupEditProfile = new PopupWithForm('.popup_type_profile-form', profileForm, handleProfileSubmit);
-popupEditProfile.setEventListeners();
-
-const popupEditAvatar = new PopupWithForm('.popup_type_avatar-form', avatarEditForm, handleEditAvatar);
-popupEditAvatar.setEventListeners();
-
-const popupAddCard = new PopupWithForm('.popup_type_place-form', cardAddForm, cardAddSubmit);
-popupAddCard.setEventListeners();
 
 const popupConfirmDeletion = new PopupConfirmation('.popup_type_confirm-deletion-form', confirmForm, handleDeletion);
 popupConfirmDeletion.setEventListeners();
@@ -117,22 +108,25 @@ Promise.all([api.loadUserData(), api.loadCardsData()])
 })
 .catch(console.error);
 
-profileEditButtonElement.addEventListener('click', () => {
-    popupEditProfile.setInputValues(userInfo.getUserInfo());    
-    popupEditProfile.open();
-});
-
-avatarEditButton.addEventListener('click', () => {
-    avatarEditForm.reset();
-    popupEditAvatar.open();
-});
-
-cardAddButtonElement.addEventListener('click', () => {
-    cardAddForm.reset();
-    popupAddCard.open();
-});
+const formHandlers = {
+    'profile-form': handleProfileSubmit,
+    'avatar-form': handleEditAvatar,
+    'place-form': cardAddSubmit
+}
 
 document.querySelectorAll('[novalidate]').forEach(form => {
     const instance = new FormValidator(validationSelectors, form);
     instance.enableValidation();
+
+    const formName = form.getAttribute('name');
+    const popupInstance = new PopupWithForm(`.popup_type_${formName}`, form, formHandlers[formName]);
+    popupInstance.setEventListeners();
+    
+    popupOpenButtons[formName].addEventListener('click', () => {
+        if (formName === 'profile-form') {
+            popupInstance.setInputValues(userInfo.getUserInfo()); 
+        }
+        popupInstance.open();
+        console.log('all set')
+    })
 })

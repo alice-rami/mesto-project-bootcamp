@@ -40,7 +40,7 @@ const profileElement = document.querySelector('.profile');
 const profileNameElement = profileElement.querySelector('.profile__name');
 const profileAboutElement = profileElement.querySelector('.profile__about');
 const profileAvatarElement = profileElement.querySelector('.profile__avatar');
-const profileEditButtonElement = profileElement.querySelector('.profile__edit-button');
+const profileEditButton = profileElement.querySelector('.profile__edit-button');
 
 // Попап и форма для редактирования профиля
 const profilePopupElement = document.querySelector('.popup_type_profile-form');
@@ -64,4 +64,10 @@ const cardViewPopupElement = document.querySelector('.popup_type_view-image');
 const targetImageElement = cardViewPopupElement.querySelector('.view-template__image');
 const targetImageTitleElement = cardViewPopupElement.querySelector('.view-template__title');
 
-export { validationSelectors, apiRequestConfig, profileSelectors, cardsContainer, cardAddButtonElement, cardAddPopupElement, cardAddForm, cardTitleInput, cardLinkInput, confirmPopupElement, confirmForm, profileNameElement,profileAboutElement, profileAvatarElement, profileEditButtonElement, profilePopupElement, profileForm, profileNameInput, profileAboutInput, avatarEditButton, avatarPopupElement, avatarEditForm, avatarLinkInput, popupsList, popupCloseButtonsList, cardViewPopupElement, targetImageElement, targetImageTitleElement, loadingText };
+const popupOpenButtons = {
+    'profile-form': profileEditButton,
+    'avatar-form': avatarEditButton,
+    'place-form': cardAddButtonElement
+}
+
+export { validationSelectors, apiRequestConfig, profileSelectors, cardsContainer, cardAddButtonElement, cardAddPopupElement, cardAddForm, cardTitleInput, cardLinkInput, confirmPopupElement, confirmForm, profileNameElement,profileAboutElement, profileAvatarElement, profileEditButton, profilePopupElement, profileForm, profileNameInput, profileAboutInput, avatarEditButton, avatarPopupElement, avatarEditForm, avatarLinkInput, popupsList, popupCloseButtonsList, cardViewPopupElement, targetImageElement, targetImageTitleElement, loadingText, popupOpenButtons };

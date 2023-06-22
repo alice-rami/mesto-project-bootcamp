@@ -6,7 +6,16 @@ export default class UserInfo {
         this._userData = userData;
     }
 
-    getUserInfo({name, about, avatar, _id}) {
+    getUserInfo() {
+        //{name, about, avatar, _id}
+        // this._userData.name = name;
+        // this._userData.about = about;
+        // this._userData.avatar = avatar;
+        // this._userData._id = _id;
+        return this._userData;
+    }
+
+    updateUserInfo({name, about, avatar, _id}) {
         this._userData.name = name;
         this._userData.about = about;
         this._userData.avatar = avatar;

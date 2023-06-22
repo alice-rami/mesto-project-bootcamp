@@ -33,7 +33,7 @@ export default class Popup {
 
     _closeByClickOnOverlay(evt) {
         if (evt.target.classList.contains('popup')) {
-            this.close(evt.target);
+            this.close();
         }
     }
 }

@@ -1,7 +1,7 @@
-const settings = {
+const validationSelectors = {
     formSelector: '.form',
     inputSelector: '.form__input',
-    inputInvalidSelector: '.form__input_invalid',
+    inputInvalidClass: 'form__input_invalid',
     submitButtonSelector: '.form__submit-button'
 }; 
 
@@ -27,9 +27,9 @@ const cardsContainer = document.querySelector('.cards__list');
 // Кнопка, попап и форма и поля для добавления карточки
 const cardAddButtonElement = document.querySelector('.profile__add-button');
 const cardAddPopupElement = document.querySelector('.popup_type_place-form');
-const cardAddFormElement = document.forms['place-form'];
-const cardTitleInput = cardAddFormElement.elements['place-title'];
-const cardLinkInput = cardAddFormElement.elements['place-link'];
+const cardAddForm = document.forms['place-form'];
+const cardTitleInput = cardAddForm.elements['place-title'];
+const cardLinkInput = cardAddForm.elements['place-link'];
 
 // Попап и форма для подтверждения удаления карточки
 const confirmPopupElement = document.querySelector('.popup_type_confirm-deletion-form');
@@ -44,9 +44,9 @@ const profileEditButtonElement = profileElement.querySelector('.profile__edit-bu
 
 // Попап и форма для редактирования профиля
 const profilePopupElement = document.querySelector('.popup_type_profile-form');
-const profileFormElement = document.forms['profile-form'];
-const profileNameInput = profileFormElement.elements['profile-name'];
-const profileAboutInput = profileFormElement.elements['profile-about'];
+const profileForm = document.forms['profile-form'];
+const profileNameInput = profileForm.elements['profile-name'];
+const profileAboutInput = profileForm.elements['profile-about'];
 
 // Кнопка, попап и форма для изменения аватара
 const avatarEditButton = profileElement.querySelector('.profile__avatar-edit-button');
@@ -59,8 +59,9 @@ const popupsList = document.querySelectorAll('.popup');
 const popupCloseButtonsList = Array.from(document.querySelectorAll('.popup__close-icon'));
 
 // Попап для просмотра страницы
+
 const cardViewPopupElement = document.querySelector('.popup_type_view-image');
 const targetImageElement = cardViewPopupElement.querySelector('.view-template__image');
 const targetImageTitleElement = cardViewPopupElement.querySelector('.view-template__title');
 
-export { settings, apiRequestConfig, profileSelectors, cardsContainer, cardAddButtonElement, cardAddPopupElement, cardAddFormElement, cardTitleInput, cardLinkInput, confirmPopupElement, confirmForm, profileNameElement,profileAboutElement, profileAvatarElement, profileEditButtonElement, profilePopupElement, profileFormElement, profileNameInput, profileAboutInput, avatarEditButton, avatarPopupElement, avatarEditForm, avatarLinkInput, popupsList, popupCloseButtonsList, cardViewPopupElement, targetImageElement, targetImageTitleElement, loadingText };
+export { validationSelectors, apiRequestConfig, profileSelectors, cardsContainer, cardAddButtonElement, cardAddPopupElement, cardAddForm, cardTitleInput, cardLinkInput, confirmPopupElement, confirmForm, profileNameElement,profileAboutElement, profileAvatarElement, profileEditButtonElement, profilePopupElement, profileForm, profileNameInput, profileAboutInput, avatarEditButton, avatarPopupElement, avatarEditForm, avatarLinkInput, popupsList, popupCloseButtonsList, cardViewPopupElement, targetImageElement, targetImageTitleElement, loadingText };

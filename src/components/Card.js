@@ -1,5 +1,5 @@
 export default class Card {
-    constructor(cardData, templateSelector, userId, handleLikeClick, handleCardClick, requestDeletion) {
+    constructor(cardData, templateSelector, userId, handleLikeClick, handleCardClick, handleDeletionRequest) {
         this._name = cardData.name;
         this._link = cardData.link;
         this._cardId = cardData._id;
@@ -10,7 +10,7 @@ export default class Card {
         this._userId = userId;
         this._handleCardClick = handleCardClick;
         this._handleLikeClick = handleLikeClick;
-        this._requestDeletion = requestDeletion;
+        this._handleDeletionRequest = handleDeletionRequest;
     }
     
     _getCardElement() {
@@ -45,7 +45,7 @@ export default class Card {
 
         if (this._isOwnCard) {
             this._elementRemoveButton.addEventListener('click', () => {
-                this._requestDeletion(this._cardId, this._element)
+                this._handleDeletionRequest(this._cardId, this._element)
             });
         }
     }

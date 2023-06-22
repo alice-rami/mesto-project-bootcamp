@@ -3,6 +3,7 @@ export default class Section {
         this._renderedItems = items;
         this._renderer = renderer;
         this._container = document.querySelector(selector);
+        this._cardForDeletion = {};
     }
 
     renderItems() {
@@ -13,5 +14,14 @@ export default class Section {
 
     addItem(element) {
         this._container.prepend(element);
+    }
+
+    getCardForDeletion() {
+        return this._cardForDeletion;
+    }
+
+    setCardForDeletion(cardId, cardElement) {
+        this._cardForDeletion.id = cardId;
+        this._cardForDeletion.element = cardElement;
     }
 }

@@ -8,9 +8,9 @@ import UserInfo from './components/UserInfo.js';
 import Section from './components/Section.js';
 import PopupWithImage from './components/PopupWithImage.js';
 import PopupWithForm from './components/PopupWithForm.js';
+import PopupConfirmation from './components/PopupConfirmation';
 
 // Переменные
-const cardForDeletion = {};
 let userId;
 let cardsList;
 
@@ -51,7 +51,7 @@ const handleEditAvatar = (evt, {avatar}) => {
 }
 
 const generateCard = (cardData) => {
-    const newCardElement = new Card(cardData, 'card__template', userId, handleLikeClick, handleCardClick, requestDeletion);
+    const newCardElement = new Card(cardData, 'card__template', userId, handleLikeClick, handleCardClick, handleDeletionRequest);
     return newCardElement.createCardElement();
 };
 
@@ -65,30 +65,22 @@ const cardAddSubmit = (evt, cardData) => {
     handleSubmit(makeRequest, popupAddCard, evt);
 }
 
-const checkConfirmation = (isConfirmed) => {
-    return new Promise((resolve, reject) => {
-        if(isConfirmed) {
-            resolve(api.deleteCard(cardForDeletion.id));
-        } else {
-            reject('Удаление отменено');
-        }
-    })
-}
-
 const handleDeletion = (evt) => {
     evt.preventDefault();
-    checkConfirmation(true)
-        .then(() => {
-            cardForDeletion.element.remove();
-            popupConfirmDeletion.close();
+    const {id, element} = cardsList.getCardForDeletion();
+    api.deleteCard(id)
+    .then(() => {
+        element.remove();
+        cardsList.setCardForDeletion('', '');
+        console.log(cardsList.getCardForDeletion());
+        popupConfirmDeletion.close();
         })
         .catch(console.error)
     }
 
-const requestDeletion = (cardId, cardElement) => {
+const handleDeletionRequest = (cardId, cardElement) => {
+    cardsList.setCardForDeletion(cardId, cardElement);
     popupConfirmDeletion.open();
-    cardForDeletion.id = cardId;
-    cardForDeletion.element = cardElement;
 }
 
 const popupEditProfile = new PopupWithForm('.popup_type_profile-form', profileFormElement, handleProfileSubmit);
@@ -100,7 +92,7 @@ popupEditAvatar.setEventListeners();
 const popupAddCard = new PopupWithForm('.popup_type_place-form', cardAddFormElement, cardAddSubmit);
 popupAddCard.setEventListeners();
 
-const popupConfirmDeletion = new PopupWithForm('.popup_type_confirm-deletion-form', confirmForm, handleDeletion);
+const popupConfirmDeletion = new PopupConfirmation('.popup_type_confirm-deletion-form', confirmForm, handleDeletion);
 popupConfirmDeletion.setEventListeners();
 
 const handleCardClick = (cardData) => {

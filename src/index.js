@@ -1,5 +1,5 @@
 import './pages/index.css';
-import { validationSelectors, apiRequestConfig, profileSelectors, confirmForm, loadingText, popupOpenButtons } from "./components/constants.js";
+import { validationConfig, apiRequestConfig, profileSelectors, confirmForm, loadingText, popupOpenButtonsConfig, popupViewImageConfig } from "./components/constants.js";
 import Api from "./components/Api.js";
 import Card from './components/Card.js';
 import FormValidator from './components/FormValidator.js';
@@ -9,12 +9,10 @@ import PopupWithImage from './components/PopupWithImage.js';
 import PopupWithForm from './components/PopupWithForm.js';
 import PopupConfirmation from './components/PopupConfirmation';
 
-// Переменные
 let userId;
 let cardsList;
 
 const api = new Api(apiRequestConfig);
-
 const userInfo = new UserInfo(profileSelectors, {});
 
 const handleSubmit = (request, popup, evt) => {
@@ -33,14 +31,18 @@ const handleSubmit = (request, popup, evt) => {
 
 const handleProfileSubmit = (evt, userData, popup) => {
     const makeRequest = () => {
-        return api.editUserData(userData).then((res) => userInfo.setUserInfo(userInfo.updateUserInfo(res)));
+        return api.editUserData(userData).then((res) => {
+            userInfo.setUserInfo(res);
+        });
     }
     handleSubmit(makeRequest, popup, evt);
 }
 
 const handleEditAvatar = (evt, {avatar}, popup) => {
     const makeRequest = () => {
-        return api.updateAvatar(avatar).then((res) => userInfo.setUserInfo(userInfo.updateUserInfo(res)));
+        return api.updateAvatar(avatar).then((res) => {
+            userInfo.setUserInfo(res);
+        });
     }
     handleSubmit(makeRequest, popup, evt);
 }
@@ -77,10 +79,16 @@ const handleDeletion = (evt) => {
         .catch(console.error)
     }
 
-const popupConfirmDeletion = new PopupConfirmation('.popup_type_confirm-deletion-form', confirmForm, handleDeletion);
+const popupConfirmationConfig = {
+    selector: '.popup_type_confirm-deletion-form',
+    form: confirmForm, 
+    handleFormSubmit: handleDeletion
+}
+
+const popupConfirmDeletion = new PopupConfirmation(popupConfirmationConfig);
 popupConfirmDeletion.setEventListeners();
 
-const popupViewImage = new PopupWithImage('.popup_type_view-image', '.view-template__title', '.view-template__image');
+const popupViewImage = new PopupWithImage(popupViewImageConfig);
 popupViewImage.setEventListeners();
 
 const handleCardClick = (cardData) => {
@@ -93,8 +101,7 @@ const handleLikeClick = (isLiked, cardId) => {
 
 Promise.all([api.loadUserData(), api.loadCardsData()])
 .then(([userData, cards]) => {
-    userInfo.updateUserInfo(userData);
-    userInfo.setUserInfo();
+    userInfo.setUserInfo(userData);
     userId = userData._id;
     cardsList = new Section({
         items: cards,
@@ -115,18 +122,17 @@ const formHandlers = {
 }
 
 document.querySelectorAll('[novalidate]').forEach(form => {
-    const instance = new FormValidator(validationSelectors, form);
+    const instance = new FormValidator(validationConfig, form);
     instance.enableValidation();
 
     const formName = form.getAttribute('name');
     const popupInstance = new PopupWithForm(`.popup_type_${formName}`, form, formHandlers[formName]);
     popupInstance.setEventListeners();
     
-    popupOpenButtons[formName].addEventListener('click', () => {
+    popupOpenButtonsConfig[formName].addEventListener('click', () => {
         if (formName === 'profile-form') {
             popupInstance.setInputValues(userInfo.getUserInfo()); 
         }
         popupInstance.open();
-        console.log('all set')
     })
 })

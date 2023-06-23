@@ -39,9 +39,7 @@ export default class Card {
             this._handleCardClick(this._getCardData());
         });
         
-        this._elementLikeButton.addEventListener('click', () => {
-            this._handleLikeButton();
-        });
+        this._elementLikeButton.addEventListener('click', this._handleLikeButton.bind(this));
 
         if (this._isOwnCard) {
             this._elementRemoveButton.addEventListener('click', () => {

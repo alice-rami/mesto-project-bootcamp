@@ -17,14 +17,22 @@ export default class FormValidator {
         this._submitButton.disabled = !isValid;
     }
 
-    _setEventListeners = () => {
-        this._setButtonState();
-        this._form.addEventListener('reset', () => {
-            this._submitButton.disabled = true;
-            this._inputList.forEach((input) => {
-                this._toggleError(input, true)
-            });
+    resetFormValidator() {
+        console.log('validator reset')
+        this._submitButton.disabled = true;
+        this._inputList.forEach((input) => {
+            this._toggleError(input, true)
         });
+    }
+
+    _setEventListeners = () => {
+        // this._setButtonState();
+        // this._form.addEventListener('reset', () => {
+        //     this._submitButton.disabled = true;
+        //     this._inputList.forEach((input) => {
+        //         this._toggleError(input, true)
+        //     });
+        // });
         this._inputList.forEach(inputField => {
             inputField.addEventListener('input', () => {
                 this._toggleError(inputField);

@@ -1,23 +1,28 @@
 const loadingText = 'Сохранение...';
 
 const confirmForm = document.forms['confirm-deletion-form'];
+const profileForm = document.forms['profile-form'];
+const avatarForm = document.forms['avatar-form'];
+const placeForm = document.forms['place-form'];
 
-const cardAddButtonElement = document.querySelector('.profile__add-button');
+const cardAddButton = document.querySelector('.profile__add-button');
 const profileEditButton = document.querySelector('.profile__edit-button');
 const avatarEditButton = document.querySelector('.profile__avatar-edit-button');
 
 const popupOpenButtonsConfig = {
     'profile-form': profileEditButton,
     'avatar-form': avatarEditButton,
-    'place-form': cardAddButtonElement
+    'place-form': cardAddButton
 }
 
 const validationConfig = {
-    formSelector: '.form',
+    formSelector: '.form-validate',
     inputSelector: '.form__input',
     inputInvalidClass: 'form__input_invalid',
     submitButtonSelector: '.form__submit-button'
 }; 
+
+const formsToValidate = Array.from(document.querySelectorAll(validationConfig.formSelector));
 
 const apiRequestConfig = {
     baseUrl: 'https://nomoreparties.co/v1/wbf-cohort-9',
@@ -35,8 +40,8 @@ const profileSelectors = {
 
 const popupViewImageConfig = {
     selector: '.popup_type_view-image',
-    titleElement: document.querySelector('.view-template__title'),
-    imageElement: document.querySelector('.view-template__image')
+    titleSelector: '.view-template__title',
+    imageSelector: '.view-template__image'
 }
 
-export { validationConfig, apiRequestConfig, profileSelectors,confirmForm, loadingText, popupOpenButtonsConfig, popupViewImageConfig };
+export { validationConfig, apiRequestConfig, profileSelectors,confirmForm, loadingText, popupViewImageConfig, formsToValidate, popupOpenButtonsConfig, cardAddButton, profileEditButton, avatarEditButton, profileForm, avatarForm, placeForm };

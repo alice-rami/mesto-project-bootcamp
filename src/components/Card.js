@@ -13,7 +13,7 @@ export default class Card {
         this._handleDeletionRequest = handleDeletionRequest;
     }
     
-    _getCardElement() {
+    _getCardTemplate() {
         const cardElement = document.getElementById(this._selector).content.querySelector('.card').cloneNode(true);
         return cardElement;
     }
@@ -22,7 +22,7 @@ export default class Card {
         return {name: this._name, link: this._link};
     }
 
-    _setLikeButtonState() {
+    setLikeButtonState() {
         this._isLiked = this._likes.some(user => user._id === this._userId);
         this._elementLikeButton.classList.toggle('card__like-button_active', this._isLiked);
     }
@@ -49,21 +49,12 @@ export default class Card {
     }
 
     _handleLikeButton() {
-        this._handleLikeClick(this._isLiked, this._cardId)
-            .then(res => {
-                this._likes = res.likes;
-                this._likesCount = res.likes.length;
-                this._elementLikesCount.textContent = this._likesCount;
-                this._setLikeButtonState();
-            })
-            .catch(err => {
-                console.log(err);
-            })
+        this._handleLikeClick(this._isLiked, this._cardId, this);
     }
     
     
     createCardElement() {
-        this._element = this._getCardElement();
+        this._element = this._getCardTemplate();
         this._elementImage = this._element.querySelector('.card__image');
         this._elementTitle = this._element.querySelector('.card__title')
         this._elementLikesCount = this._element.querySelector('.card__likes-count');
@@ -73,11 +64,18 @@ export default class Card {
         this._elementImage.alt = this._name;
         this._elementTitle.textContent = this._name;
         this._elementLikesCount.textContent = this._likesCount;
-        this._setLikeButtonState();
+        this.setLikeButtonState();
         this._setRemoveButtonState();       
         this._setEventListeners();
         
         return this._element;
     }
 
+    getLikeCountElement() {
+        return this._elementLikesCount;
+    }
+
+    setLikesData(likesArray) {
+        this._likes = likesArray;
+    }
 }

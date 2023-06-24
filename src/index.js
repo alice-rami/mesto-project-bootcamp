@@ -95,8 +95,17 @@ const handleCardClick = (cardData) => {
     popupViewImage.open(cardData);
 }
 
-const handleLikeClick = (isLiked, cardId) => {
-    return isLiked ? api.removeLike(cardId) : api.addLike(cardId);
+const handleLikeClick = (isLiked, cardId, cardInstance) => {
+    (isLiked ? api.removeLike(cardId) : api.addLike(cardId))
+    .then(res => {
+        const likesElement = cardInstance.getLikeCountElement();
+        likesElement.textContent = res.likes.length;
+        cardInstance.setLikesData(res.likes);
+        cardInstance.setLikeButtonState();
+        })
+    .catch(err => {
+        console.log(err);
+        })
 }
 
 Promise.all([api.loadUserData(), api.loadCardsData()])

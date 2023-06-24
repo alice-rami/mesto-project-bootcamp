@@ -5,13 +5,13 @@ export default class PopupWithForm extends Popup {
         super(selector);
         this._form = form;
         this._handleFormSubmit = handleFormSubmit;
-        this._inputList = this._inputList = this._form.querySelectorAll('.form__input');
-        console.log(this._inputList)
-        this._formButtonText = this._form.elements['submit'].textContent;
+        this._inputList = this._form.querySelectorAll('.form__input');
+        this._formButton = this._form.elements['submit'];
+        this._formButtonText = this._formButton.textContent;
     }
 
-    getFormButtonText() {
-        return this._formButtonText;
+    toggleButtonText(isLoading, loadingText) {
+        this._formButton.textContent = isLoading ? loadingText : this._formButtonText;
     }
 
     _getInputValues() {

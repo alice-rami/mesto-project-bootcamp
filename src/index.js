@@ -21,36 +21,35 @@ const renderItems = items => {
 
 const cardsList = new Section(renderItems, '.cards__list');
 
-const handleSubmit = (request, popup, evt) => {
+const handleSubmit = (request, popupInstance, evt) => {
     evt.preventDefault();
-    const submitButton = evt.submitter;
-    submitButton.textContent = loadingText;
+    popupInstance.toggleButtonText(true, loadingText);
     request()
     .then(() => {
-        popup.close();
+        popupInstance.close();
     })
     .catch(console.error)
     .finally(() => {
-        submitButton.textContent = popup.getFormButtonText();
+        popupInstance.toggleButtonText(false, loadingText);
     });
 }
 
-const handleProfileSubmit = (evt, userData, popup) => {
+const handleProfileSubmit = (evt, userData, popupInstance) => {
     const makeRequest = () => {
         return api.editUserData(userData).then((res) => {
             userInfo.setUserInfo(res);
         });
     }
-    handleSubmit(makeRequest, popup, evt);
+    handleSubmit(makeRequest, popupInstance, evt);
 }
 
-const handleEditAvatar = (evt, {avatar}, popup) => {
+const handleEditAvatar = (evt, {avatar}, popupInstance) => {
     const makeRequest = () => {
         return api.updateAvatar(avatar).then((res) => {
             userInfo.setUserInfo(res);
         });
     }
-    handleSubmit(makeRequest, popup, evt);
+    handleSubmit(makeRequest, popupInstance, evt);
 }
 
 const generateCard = (cardData) => {
@@ -58,14 +57,14 @@ const generateCard = (cardData) => {
     return newCardElement.createCardElement();
 };
 
-const cardAddSubmit = (evt, cardData, popup) => {
+const cardAddSubmit = (evt, cardData, popupInstance) => {
     const makeRequest = () => {     
         return api.addNewCard(cardData).then((res) => {
             const cardElement = generateCard(res);
             cardsList.addItem(cardElement)
         });
     }
-    handleSubmit(makeRequest, popup, evt);
+    handleSubmit(makeRequest, popupInstance, evt);
 }
 
 const handleDeletionRequest = (cardId, cardInstance) => {

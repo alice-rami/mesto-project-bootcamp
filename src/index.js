@@ -1,5 +1,5 @@
 import './pages/index.css';
-import { validationConfig, apiRequestConfig, profileSelectors, confirmForm, loadingText, formsToValidate, popupViewImageConfig, popupOpenButtonsConfig, cardAddButton, profileEditButton, avatarEditButton, profileForm, avatarForm, placeForm } from "./components/constants.js";
+import { validationConfig, apiRequestConfig, profileSelectors, confirmForm, loadingText, formsToValidate, popupViewImageConfig, cardAddButton, profileEditButton, avatarEditButton, profileForm, avatarForm, placeForm } from "./components/constants.js";
 import Api from "./components/Api.js";
 import Card from './components/Card.js';
 import FormValidator from './components/FormValidator.js';
@@ -68,16 +68,15 @@ const cardAddSubmit = (evt, cardData, popup) => {
     handleSubmit(makeRequest, popup, evt);
 }
 
-const handleDeletionRequest = (cardId, cardElement) => {
-    popupConfirmDeletion.open(cardId, cardElement);
+const handleDeletionRequest = (cardId, cardInstance) => {
+    popupConfirmDeletion.open(cardId, cardInstance);
 }
 
-const handleDeletion = (evt, {cardId, cardElement}) => {
+const handleDeletion = (evt, cardId, cardInstance) => {
     evt.preventDefault();
     api.deleteCard(cardId)
     .then(() => {
-        cardElement.remove();
-        // popupConfirmDeletion.setCardForDeletion('', '');
+        cardInstance.removeCardElement(cardId);
         popupConfirmDeletion.close();
         })
         .catch(console.error)
@@ -152,23 +151,42 @@ const { editProfile, editAvatar, addCard } = popupsWithFormsConfig;
 const popupEditProfile = new PopupWithForm(editProfile);
 popupEditProfile.setEventListeners();
 
-profileEditButton.addEventListener('click', () => {
-    formValidators.get('profile-form').resetFormValidator();
-    popupEditProfile.open();
-})
-
 const popupEditAvatar = new PopupWithForm(editAvatar);
 popupEditAvatar.setEventListeners();
-
-avatarEditButton.addEventListener('click', () => {
-    formValidators.get('avatar-form').resetFormValidator();
-    popupEditAvatar.open();
-})
 
 const popupAddCard = new PopupWithForm(addCard);
 popupAddCard.setEventListeners();
 
-cardAddButton.addEventListener('click', () => {
-    formValidators.get('place-form').resetFormValidator();
-    popupAddCard.open();
-})
+
+const popupOpenButtonsConfig = new Map(
+    [[profileEditButton, {selector: 'profile-form', popupInstance: popupEditProfile}],
+    [avatarEditButton, {selector: 'avatar-form', popupInstance: popupEditAvatar}],
+    [cardAddButton, {selector: 'place-form', popupInstance: popupAddCard}]
+]);
+
+const setButtonEventListeners = (value, key) => {
+    key.addEventListener('click', () => {
+        if (value.selector === 'profile-form') {
+            value.popupInstance.setInputValues(userInfo.getUserInfo()); 
+        }
+        formValidators.get(value.selector).resetFormValidator();
+        value.popupInstance.open();
+  });
+}
+  
+popupOpenButtonsConfig.forEach(setButtonEventListeners);
+
+// profileEditButton.addEventListener('click', () => {
+//     formValidators.get('profile-form').resetFormValidator();
+//     popupEditProfile.open();
+// })
+
+// avatarEditButton.addEventListener('click', () => {
+//     formValidators.get('avatar-form').resetFormValidator();
+//     popupEditAvatar.open();
+// })
+
+// cardAddButton.addEventListener('click', () => {
+//     formValidators.get('place-form').resetFormValidator();
+//     popupAddCard.open();
+// })

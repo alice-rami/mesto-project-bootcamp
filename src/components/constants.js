@@ -9,12 +9,6 @@ const cardAddButton = document.querySelector('.profile__add-button');
 const profileEditButton = document.querySelector('.profile__edit-button');
 const avatarEditButton = document.querySelector('.profile__avatar-edit-button');
 
-const popupOpenButtonsConfig = {
-    'profile-form': profileEditButton,
-    'avatar-form': avatarEditButton,
-    'place-form': cardAddButton
-}
-
 const validationConfig = {
     formSelector: '.form-validate',
     inputSelector: '.form__input',
@@ -44,4 +38,4 @@ const popupViewImageConfig = {
     imageSelector: '.view-template__image'
 }
 
-export { validationConfig, apiRequestConfig, profileSelectors,confirmForm, loadingText, popupViewImageConfig, formsToValidate, popupOpenButtonsConfig, cardAddButton, profileEditButton, avatarEditButton, profileForm, avatarForm, placeForm };
+export { validationConfig, apiRequestConfig, profileSelectors,confirmForm, loadingText, popupViewImageConfig, formsToValidate, cardAddButton, profileEditButton, avatarEditButton, profileForm, avatarForm, placeForm };

@@ -1,13 +1,27 @@
 const loadingText = 'Сохранение...';
 
-const confirmForm = document.forms['confirm-deletion-form'];
-const profileForm = document.forms['profile-form'];
-const avatarForm = document.forms['avatar-form'];
-const placeForm = document.forms['place-form'];
+const profileElement = document.querySelector('.profile');
 
-const cardAddButton = document.querySelector('.profile__add-button');
-const profileEditButton = document.querySelector('.profile__edit-button');
-const avatarEditButton = document.querySelector('.profile__avatar-edit-button');
+const formSelectors = {
+    editProfile: {
+        formSelector: 'profile-form',
+    },
+    editAvatar: {
+        formSelector: 'avatar-form',
+    },
+    addCard: {
+        formSelector: 'place-form'
+    }
+}
+
+for (let item in formSelectors) {
+    const formSelector = formSelectors[item]['formSelector'];
+    formSelectors[item]['popupSelector'] = `.popup_type_${formSelector}`;
+    formSelectors[item]['form'] = document.forms[formSelector];
+    formSelectors[item]['openButton'] = profileElement.querySelector(`[name=${formSelector}-button]`)
+}
+
+const confirmForm = document.forms['confirm-deletion-form'];
 
 const validationConfig = {
     formSelector: '.form-validate',
@@ -15,8 +29,6 @@ const validationConfig = {
     inputInvalidClass: 'form__input_invalid',
     submitButtonSelector: '.form__submit-button'
 }; 
-
-const formsToValidate = Array.from(document.querySelectorAll(validationConfig.formSelector));
 
 const apiRequestConfig = {
     baseUrl: 'https://nomoreparties.co/v1/wbf-cohort-9',
@@ -38,4 +50,4 @@ const popupViewImageConfig = {
     imageSelector: '.view-template__image'
 }
 
-export { validationConfig, apiRequestConfig, profileSelectors,confirmForm, loadingText, popupViewImageConfig, formsToValidate, cardAddButton, profileEditButton, avatarEditButton, profileForm, avatarForm, placeForm };
+export { validationConfig, apiRequestConfig, profileSelectors,confirmForm, loadingText, popupViewImageConfig, formSelectors };

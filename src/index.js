@@ -1,6 +1,6 @@
 import './pages/index.css';
-import { validationConfig, apiRequestConfig, profileSelectors, confirmForm, loadingText, formsToValidate, popupViewImageConfig, cardAddButton, profileEditButton, avatarEditButton, profileForm, avatarForm, placeForm } from "./components/constants.js";
-import Api from "./components/Api.js";
+import { validationConfig, apiRequestConfig, profileSelectors, confirmForm, loadingText, popupViewImageConfig, formSelectors } from "./components/constants.js";
+import Api from "./components/Api1.js";
 import Card from './components/Card.js';
 import FormValidator from './components/FormValidator.js';
 import UserInfo from './components/UserInfo.js';
@@ -105,87 +105,50 @@ const handleLikeClick = (isLiked, cardId, cardInstance) => {
         cardInstance.setLikesData(res.likes);
         cardInstance.setLikeButtonState();
         })
-    .catch(err => {
-        console.log(err);
-        })
+    .catch(console.error)
 }
 
 Promise.all([api.loadUserData(), api.loadCardsData()])
 .then(([userData, cards]) => {
-    console.log(userData)
     userInfo.setUserInfo(userData);
     userInfo.setUserId(userData._id);
     cardsList.renderItems(cards);
 })
 .catch(console.error);
 
-const formValidators = new Map();
-formsToValidate.forEach(form => {
+// Создание экземпляров валидатора для форм
+
+for (let item in formSelectors) {
+    const form = formSelectors[item].form;
     const instance = new FormValidator(validationConfig, form);
     instance.enableValidation();
-    formValidators.set(form.getAttribute('name'), instance);
-});
-
-
-const popupsWithFormsConfig = {
-    editProfile: {
-        selector: '.popup_type_profile-form',
-        form: profileForm,
-        handleFormSubmit: handleProfileSubmit,
-    },
-     editAvatar: {
-        selector: '.popup_type_avatar-form',
-        form: avatarForm,
-        handleFormSubmit: handleEditAvatar,
-    },
-     addCard: {
-        selector: '.popup_type_place-form',
-        form: placeForm,
-        handleFormSubmit: cardAddSubmit,
-    }
+    formSelectors[item]['validatorInstance'] = instance;
 }
 
-const { editProfile, editAvatar, addCard } = popupsWithFormsConfig;
+// Создание экземпляров попапов с формами
 
-const popupEditProfile = new PopupWithForm(editProfile);
+const {editProfile: profile, editAvatar : avatar, addCard: add } = formSelectors;
+
+const popupEditProfile = new PopupWithForm(profile.popupSelector, profile.form, handleProfileSubmit);
+formSelectors.editProfile.popupInstance = popupEditProfile;
 popupEditProfile.setEventListeners();
 
-const popupEditAvatar = new PopupWithForm(editAvatar);
+const popupEditAvatar = new PopupWithForm(avatar.popupSelector, avatar.form, handleEditAvatar);
+formSelectors.editAvatar.popupInstance = popupEditAvatar;
 popupEditAvatar.setEventListeners();
 
-const popupAddCard = new PopupWithForm(addCard);
+const popupAddCard = new PopupWithForm(add.popupSelector, add.form, cardAddSubmit);
+formSelectors.addCard.popupInstance = popupAddCard;
 popupAddCard.setEventListeners();
 
+// Создание слушателей для кнопок
 
-const popupOpenButtonsConfig = new Map(
-    [[profileEditButton, {selector: 'profile-form', popupInstance: popupEditProfile}],
-    [avatarEditButton, {selector: 'avatar-form', popupInstance: popupEditAvatar}],
-    [cardAddButton, {selector: 'place-form', popupInstance: popupAddCard}]
-]);
-
-const setButtonEventListeners = (value, key) => {
-    key.addEventListener('click', () => {
-        if (value.selector === 'profile-form') {
-            value.popupInstance.setInputValues(userInfo.getUserInfo()); 
+for (let item in formSelectors) {
+    formSelectors[item].openButton.addEventListener('click', () => {
+        if (formSelectors[item].formSelector === 'profile-form') {
+            formSelectors[item].popupInstance.setInputValues(userInfo.getUserInfo()); 
         }
-        formValidators.get(value.selector).resetFormValidator();
-        value.popupInstance.open();
-  });
+        formSelectors[item].validatorInstance.resetFormValidator();
+        formSelectors[item].popupInstance.open();
+    })
 }
-  
-popupOpenButtonsConfig.forEach(setButtonEventListeners);
-
-// profileEditButton.addEventListener('click', () => {
-//     formValidators.get('profile-form').resetFormValidator();
-//     popupEditProfile.open();
-// })
-
-// avatarEditButton.addEventListener('click', () => {
-//     formValidators.get('avatar-form').resetFormValidator();
-//     popupEditAvatar.open();
-// })
-
-// cardAddButton.addEventListener('click', () => {
-//     formValidators.get('place-form').resetFormValidator();
-//     popupAddCard.open();
-// })

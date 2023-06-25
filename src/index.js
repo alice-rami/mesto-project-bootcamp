@@ -1,6 +1,6 @@
 import './pages/index.css';
-import { validationConfig, apiRequestConfig, profileSelectors, confirmForm, loadingText, popupViewImageConfig, formSelectors } from "./components/constants.js";
-import Api from "./components/Api1.js";
+import { validationConfig, apiRequestConfig, profileSelectors, loadingText, popupViewImageConfig, popupConfirmationConfig, formSelectors } from "./components/constants.js";
+import Api from "./components/Api.js";
 import Card from './components/Card.js';
 import FormValidator from './components/FormValidator.js';
 import UserInfo from './components/UserInfo.js';
@@ -68,7 +68,8 @@ const cardAddSubmit = (evt, cardData, popupInstance) => {
 }
 
 const handleDeletionRequest = (cardId, cardInstance) => {
-    popupConfirmDeletion.open(cardId, cardInstance);
+    popupConfirmDeletion.setCardForDeletion(cardId, cardInstance);
+    popupConfirmDeletion.open();
 }
 
 const handleDeletion = (evt, cardId, cardInstance) => {
@@ -81,13 +82,7 @@ const handleDeletion = (evt, cardId, cardInstance) => {
         .catch(console.error)
     }
 
-const popupConfirmationConfig = {
-    selector: '.popup_type_confirm-deletion-form',
-    form: confirmForm, 
-    handleFormSubmit: handleDeletion
-}
-
-const popupConfirmDeletion = new PopupConfirmation(popupConfirmationConfig);
+const popupConfirmDeletion = new PopupConfirmation(popupConfirmationConfig, handleDeletion);
 popupConfirmDeletion.setEventListeners();
 
 const popupViewImage = new PopupWithImage(popupViewImageConfig);

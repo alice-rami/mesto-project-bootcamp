@@ -2,6 +2,7 @@ const loadingText = 'Сохранение...';
 
 const profileElement = document.querySelector('.profile');
 
+// Объект с данными для попапов с формой
 const formSelectors = {
     editProfile: {
         formSelector: 'profile-form',
@@ -15,13 +16,22 @@ const formSelectors = {
 }
 
 for (let item in formSelectors) {
-    const formSelector = formSelectors[item]['formSelector'];
+    const formSelector = formSelectors[item].formSelector;
     formSelectors[item]['popupSelector'] = `.popup_type_${formSelector}`;
     formSelectors[item]['form'] = document.forms[formSelector];
-    formSelectors[item]['openButton'] = profileElement.querySelector(`[name=${formSelector}-button]`)
+    formSelectors[item]['openButton'] = profileElement.querySelector(`[name=${formSelector}-button]`); // кнопка для навешивания слушателя
 }
 
-const confirmForm = document.forms['confirm-deletion-form'];
+const popupConfirmationConfig = {
+    selector: '.popup_type_confirm-deletion-form',
+    form: document.forms['confirm-deletion-form']
+}
+
+const popupViewImageConfig = {
+    selector: '.popup_type_view-image',
+    titleSelector: '.view-template__title',
+    imageSelector: '.view-template__image'
+}
 
 const validationConfig = {
     formSelector: '.form-validate',
@@ -44,10 +54,4 @@ const profileSelectors = {
     avatarSelector: '.profile__avatar'
 }
 
-const popupViewImageConfig = {
-    selector: '.popup_type_view-image',
-    titleSelector: '.view-template__title',
-    imageSelector: '.view-template__image'
-}
-
-export { validationConfig, apiRequestConfig, profileSelectors,confirmForm, loadingText, popupViewImageConfig, formSelectors };
+export { validationConfig, apiRequestConfig, profileSelectors, loadingText, popupViewImageConfig, formSelectors, popupConfirmationConfig };

@@ -4,7 +4,6 @@ export default class Card {
         this._link = cardData.link;
         this._cardId = cardData._id;
         this._likes = cardData.likes;
-        this._likesCount = cardData.likes.length;
         this._cardOwnerId = cardData.owner._id;
         this._selector = templateSelector;
         this._userId = userId;
@@ -72,7 +71,7 @@ export default class Card {
         this._elementImage.src = this._link;
         this._elementImage.alt = this._name;
         this._elementTitle.textContent = this._name;
-        this._elementLikesCount.textContent = this._likesCount;
+        this._elementLikesCount.textContent = this._likes.length;
         this.setLikeButtonState();
         this._setRemoveButtonState();       
         this._setEventListeners();

@@ -1,46 +1,57 @@
-const settings = {
-    formSelector: '.form',
+const loadingText = 'Сохранение...';
+
+const profileElement = document.querySelector('.profile');
+
+// Объект с данными для попапов с формой
+const formSelectors = {
+    editProfile: {
+        formSelector: 'profile-form',
+    },
+    editAvatar: {
+        formSelector: 'avatar-form',
+    },
+    addCard: {
+        formSelector: 'place-form'
+    }
+}
+
+for (let item in formSelectors) {
+    const formSelector = formSelectors[item].formSelector;
+    formSelectors[item]['popupSelector'] = `.popup_type_${formSelector}`;
+    formSelectors[item]['form'] = document.forms[formSelector];
+    formSelectors[item]['openButton'] = profileElement.querySelector(`[name=${formSelector}-button]`); // кнопка для навешивания слушателя
+}
+
+const popupConfirmationConfig = {
+    selector: '.popup_type_confirm-deletion-form',
+    form: document.forms['confirm-deletion-form']
+}
+
+const popupViewImageConfig = {
+    selector: '.popup_type_view-image',
+    titleSelector: '.view-template__title',
+    imageSelector: '.view-template__image'
+}
+
+const validationConfig = {
+    formSelector: '.form-validate',
     inputSelector: '.form__input',
-    inputInvalidSelector: '.form__input_invalid',
-    submitButtonSelector: '.form__submit-button',
+    inputInvalidClass: 'form__input_invalid',
+    submitButtonSelector: '.form__submit-button'
 }; 
 
-// Контейнер для создания карточки
-const cardsContainer = document.querySelector('.cards__list');
+const apiRequestConfig = {
+    baseUrl: 'https://nomoreparties.co/v1/wbf-cohort-9',
+    headers: {
+    authorization: 'c1d6c920-f67e-42f9-9dd3-963993549d9b',
+    'Content-Type': 'application/json'
+    }
+}
 
-// Кнопка, попап и форма и поля для добавления карточки
-const cardAddButtonElement = document.querySelector('.profile__add-button');
-const cardAddPopupElement = document.querySelector('.popup_type_add-card');
-const cardAddFormElement = document.forms['place-form'];
-const cardTitleInput = cardAddFormElement.elements['place-title'];
-const cardLinkInput = cardAddFormElement.elements['place-link'];
+const profileSelectors = {
+    nameSelector: '.profile__name',
+    aboutSelector: '.profile__about',
+    avatarSelector: '.profile__avatar'
+}
 
-// Попап и форма для подтверждения удаления карточки
-const confirmPopupElement = document.querySelector('.popup_type_confirm-deletion');
-const confirmForm = document.forms['confirm-deletion-form'];
-const confirmPopupCloseButton = confirmPopupElement.querySelector('.popup__close-icon');
-
-// Поля профиля и кнопка редактирования профиля
-const profileElement = document.querySelector('.profile');
-const profileNameElement = profileElement.querySelector('.profile__name');
-const profileAboutElement = profileElement.querySelector('.profile__about');
-const profileAvatarElement = profileElement.querySelector('.profile__avatar');
-const profileEditButtonElement = profileElement.querySelector('.profile__edit-button');
-
-// Попап и форма для редактирования профиля
-const profilePopupElement = document.querySelector('.popup_type_profile');
-const profileFormElement = document.forms['profile-form'];
-const profileNameInput = profileFormElement.elements['profile-name'];
-const profileAboutInput = profileFormElement.elements['profile-about'];
-
-// Кнопка, попап и форма для изменения аватара
-const avatarEditButton = profileElement.querySelector('.profile__avatar-edit-button');
-const avatarPopupElement = document.querySelector('.popup_type_edit-avatar');
-const avatarEditForm = document.forms['avatar-form'];
-const avatarLinkInput = avatarEditForm.elements['avatar-link'];
-
-// Список попапов и список кнопок закрытия
-const popupsList = document.querySelectorAll('.popup');
-const popupCloseButtonsList = Array.from(document.querySelectorAll('.popup__close-icon'));
-
-export { settings, cardsContainer, cardAddButtonElement, cardAddPopupElement, cardAddFormElement, cardTitleInput, cardLinkInput, confirmPopupElement, confirmForm, profileNameElement,profileAboutElement, profileAvatarElement, profileEditButtonElement, profilePopupElement, profileFormElement, profileNameInput, profileAboutInput, avatarEditButton, avatarPopupElement, avatarEditForm, avatarLinkInput, popupsList, popupCloseButtonsList };
+export { validationConfig, apiRequestConfig, profileSelectors, loadingText, popupViewImageConfig, formSelectors, popupConfirmationConfig };

@@ -1,158 +1,163 @@
 import './pages/index.css';
-import { settings, cardsContainer, cardAddButtonElement, cardAddPopupElement, cardAddFormElement, cardTitleInput, cardLinkInput, confirmPopupElement, confirmForm, profileNameElement,profileAboutElement, profileAvatarElement, profileEditButtonElement, profilePopupElement, profileFormElement, profileNameInput, profileAboutInput, avatarEditButton, avatarPopupElement, avatarEditForm, avatarLinkInput, popupsList, popupCloseButtonsList } from "./components/constants.js";
-import { enableValidation } from "./components/validate.js";
-import { createCardElement } from "./components/card.js";
-import { openPopup, closePopup, closeByClickOnOverlay } from "./components/modal.js";
-import { addNewCard, deleteCard, editUserData, loadCardsData, loadUserData, updateAvatar } from './components/api.js';
+import {
+  validationConfig,
+  apiRequestConfig,
+  profileSelectors,
+  popupViewImageConfig,
+  popupConfirmationConfig,
+  formSelectors,
+} from './components/constants.js';
+import Api from './components/Api.js';
+import Card from './components/Card.js';
+import FormValidator from './components/FormValidator.js';
+import UserInfo from './components/UserInfo.js';
+import Section from './components/Section.js';
+import PopupWithImage from './components/PopupWithImage.js';
+import PopupWithForm from './components/PopupWithForm.js';
+import PopupConfirmation from './components/PopupConfirmation';
+import { handleSubmit } from './components/utils.js';
 
-// Переменные
+const api = new Api(apiRequestConfig);
+const userInfo = new UserInfo(profileSelectors);
 
-let userId;
-const cardForDeletion = {};
-
-// Функции и добавление слушателей
-
-// Загрузка информации о пользователе с сервера
-const renderUserData = res => {
-    profileNameElement.textContent = res.name;
-    profileAboutElement.textContent = res.about;
-    profileAvatarElement.src = res.avatar;
-    userId = res._id;
-}
-
-// Создание и отображение карточки
-const renderCard = card => {
-    const newCard = createCard(card);
-    cardsContainer.prepend(newCard);
+const renderItem = (item) => {
+  const newCard = generateCard(item);
+  cardsList.addItem(newCard);
 };
 
-Promise.all([loadUserData(), loadCardsData()])
-    .then(([userData, cards]) => {
-        renderUserData(userData);
-        cards.forEach(renderCard);
+const cardsList = new Section(renderItem, '.cards__list');
+
+const handleProfileSubmit = (userData) => {
+  const makeRequest = () => {
+    return api.editUserData(userData).then((res) => {
+      userInfo.setUserInfo(res);
+    });
+  };
+  handleSubmit(makeRequest, popupEditProfile);
+};
+
+const handleEditAvatar = ({ avatar }) => {
+  const makeRequest = () => {
+    return api.updateAvatar(avatar).then((res) => {
+      userInfo.setUserInfo(res);
+    });
+  };
+  handleSubmit(makeRequest, popupEditAvatar);
+};
+
+const generateCard = (cardData) => {
+  const newCardElement = new Card(
+    cardData,
+    'card__template',
+    userInfo.getUserId(),
+    handleLikeClick,
+    handleCardClick,
+    handleDeletionRequest
+  );
+  return newCardElement.createCardElement();
+};
+
+const cardAddSubmit = (cardData) => {
+  const makeRequest = () => {
+    return api.addNewCard(cardData).then((res) => {
+      const cardElement = generateCard(res);
+      cardsList.addItem(cardElement);
+    });
+  };
+  handleSubmit(makeRequest, popupAddCard);
+};
+
+const handleDeletionRequest = (cardInstance) => {
+  popupConfirmDeletion.setCardForDeletion(cardInstance);
+  popupConfirmDeletion.open();
+};
+
+const handleDeletion = (cardInstance) => {
+  const cardId = cardInstance.getCardId();
+  api
+    .deleteCard(cardId)
+    .then(() => {
+      cardInstance.removeCardElement(cardId);
+      popupConfirmDeletion.close();
     })
     .catch(console.error);
+};
 
-// Сохранение...
-const renderLoading = (isLoading, button, buttonText='Сохранить', loadingText='Сохранение...') => {
-    button.textContent = isLoading ? loadingText : buttonText;
-}
+const popupConfirmDeletion = new PopupConfirmation(
+  popupConfirmationConfig,
+  handleDeletion
+);
+popupConfirmDeletion.setEventListeners();
 
-// Универсальная функция обработки сабмита
-const handleSubmit = (request, evt, loadingText = 'Сохранение...') => {
-    evt.preventDefault();
-    const submitButton = evt.submitter;
-    const initialText = submitButton.textContent;
-    renderLoading(true, submitButton, initialText, loadingText);
+const popupViewImage = new PopupWithImage(popupViewImageConfig);
+popupViewImage.setEventListeners();
 
-    request()
-    .then(() => {
-        evt.target.reset();
-        closePopup(evt.target.closest('.popup'));
+const handleCardClick = (cardData) => {
+  popupViewImage.open(cardData);
+};
+
+const handleLikeClick = (isLiked, cardInstance) => {
+  const cardId = cardInstance.getCardId();
+  (isLiked ? api.removeLike(cardId) : api.addLike(cardId))
+    .then((res) => {
+      cardInstance.setLikeButtonState(res.likes);
     })
-    .catch(console.error)
-    .finally(() => {
-        renderLoading(false, submitButton, initialText);
-    });
+    .catch(console.error);
+};
+
+Promise.all([api.loadUserData(), api.loadCardsData()])
+  .then(([userData, cards]) => {
+    userInfo.setUserInfo(userData);
+    cardsList.renderItems(cards);
+  })
+  .catch(console.error);
+
+// Создание экземпляров валидатора для форм
+
+for (let item in formSelectors) {
+  const form = formSelectors[item].form;
+  const instance = new FormValidator(validationConfig, form);
+  instance.enableValidation();
+  formSelectors[item]['validatorInstance'] = instance;
 }
 
-// Изменение данных профиля
-const openProfilePopup = () => {
-    profileNameInput.value = profileNameElement.textContent;
-    profileAboutInput.value = profileAboutElement.textContent;
-    openPopup(profilePopupElement);
-}
+// Создание экземпляров попапов с формами
 
-profileEditButtonElement.addEventListener('click', openProfilePopup);
+const {
+  editProfile: profile,
+  editAvatar: avatar,
+  addCard: add,
+} = formSelectors;
 
-const handleProfileSubmit = evt => {
-    const makeRequest = () => {
-        const userData = {
-            name: profileNameInput.value,
-            about: profileAboutInput.value
-        };
-        return editUserData(userData).then(renderUserData);
-    }
-    handleSubmit(makeRequest, evt);
-}
+const popupEditProfile = new PopupWithForm(
+  profile.popupSelector,
+  handleProfileSubmit
+);
+popupEditProfile.setEventListeners();
 
-profileFormElement.addEventListener('submit', handleProfileSubmit);
+const popupEditAvatar = new PopupWithForm(
+  avatar.popupSelector,
+  handleEditAvatar
+);
+popupEditAvatar.setEventListeners();
 
-// Изменение аватара
-const handleEditAvatar = evt => {
-    const makeRequest = () => {
-        return updateAvatar(avatarLinkInput.value).then(renderUserData);
-    }
-    handleSubmit(makeRequest, evt);
-}
+const popupAddCard = new PopupWithForm(add.popupSelector, cardAddSubmit);
+popupAddCard.setEventListeners();
 
-avatarEditForm.addEventListener('submit', handleEditAvatar);
+// Создание слушателей для кнопок
 
-avatarEditButton.addEventListener('click', () => {
-    avatarEditForm.reset();
-    openPopup(avatarPopupElement);
+profile.openButton.addEventListener('click', () => {
+  popupEditProfile.setInputValues(userInfo.getUserInfo());
+  profile.validatorInstance.resetFormValidator();
+  popupEditProfile.open();
 });
 
-// Подтверждение удаления карточки
-const checkConfirmation = (isConfirmed) => {
-    return new Promise((resolve, reject) => {
-        if(isConfirmed) {
-            resolve(deleteCard(cardForDeletion.id));
-        } else {
-            reject('Удаление отменено');
-        }
-    })
-}
-
-const requestDeletion = (cardId, cardElement) => {
-    openPopup(confirmPopupElement);
-    cardForDeletion.id = cardId;
-    cardForDeletion.element = cardElement;
-}
-
-const handleDeletion = (evt) => {
-    evt.preventDefault();
-    checkConfirmation(true)
-        .then(() => {
-            cardForDeletion.element.remove();
-            closePopup(confirmPopupElement);
-        })
-        .catch(console.error)
-    }
-
-confirmForm.addEventListener('submit', handleDeletion);
-
-// Создание и добавление карточки
-const createCard = res => {
-    const newCard = createCardElement(res, userId, requestDeletion);
-    return newCard;
-}
-
-cardAddButtonElement.addEventListener('click', () => {
-    cardAddFormElement.reset();
-    openPopup(cardAddPopupElement);
+add.openButton.addEventListener('click', () => {
+  add.validatorInstance.resetFormValidator();
+  popupAddCard.open();
 });
 
-const cardAddSubmit = evt => {
-    const makeRequest = () => {
-        const cardData = {
-            name: cardTitleInput.value, 
-            link: cardLinkInput.value
-        };
-        return addNewCard(cardData).then(renderCard);
-    }
-    handleSubmit(makeRequest, evt);
-}
-
-cardAddFormElement.addEventListener('submit', cardAddSubmit);
-
-// Включение валидации
-enableValidation(settings);
-
-popupCloseButtonsList.forEach(item => {
-    item.addEventListener('click', () => closePopup(item.closest('.popup')))
-});
-
-popupsList.forEach(popupElement => {
-    popupElement.addEventListener('mousedown', closeByClickOnOverlay);
+avatar.openButton.addEventListener('click', () => {
+  avatar.validatorInstance.resetFormValidator();
+  popupEditAvatar.open();
 });

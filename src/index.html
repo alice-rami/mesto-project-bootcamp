@@ -14,16 +14,16 @@
         <section class="profile">
             <div class="profile__avatar-container">
                 <img src="" alt="Аватар" class="profile__avatar">
-                <button type="button" class="button profile__avatar-edit-button" aria-label="Добавить"></button>
+                <button type="button" class="button profile__avatar-edit-button" name="avatar-form-button" aria-label="Изменить аватар"></button>
             </div>
             <div class="profile__info">
                 <div class="profile__name-container">
                     <h1 class="profile__name"></h1>
-                    <button type="button" aria-label="Изменить профиль" class="button profile__edit-button opacity"></button>
+                    <button type="button" aria-label="Изменить профиль" class="button profile__edit-button opacity" name="profile-form-button"></button>
                 </div>
                 <p class="profile__about"></p>
             </div>
-            <button type="button" class="button profile__add-button opacity" aria-label="Добавить"></button>
+            <button type="button" class="button profile__add-button opacity" name="place-form-button" aria-label="Добавить"></button>
         </section>
         <section class="cards" aria-label="Секция с фотографиями">
             <ul class="cards__list">
@@ -33,55 +33,55 @@
     <footer class="footer">
         <p class="footer__copyright">&copy; 2023 Mesto Russia</p>
     </footer>
-    <div class="popup popup_type_profile">
+    <div class="popup popup_type_profile-form">
         <div class="popup__container">
             <button type="button" aria-label="Закрыть" class="button popup__close-icon opacity"></button>
             <h2 class="popup__heading">Редактировать профиль</h2>
-            <form class="form" name="profile-form" novalidate>
+            <form class="form form-validate" name="profile-form" novalidate>
                 <div class="form__input-container">
-                    <input type="text" name="profile-name" id="profile-name" placeholder="Имя" class="form__input" required minlength="2" maxlength="40">
+                    <input type="text" name="name" id="profile-name" placeholder="Имя" class="form__input" required minlength="2" maxlength="40">
                     <span id="error-profile-name" class="form__input-error"></span>
-                    <input type="text" name="profile-about" id="profile-about" placeholder="О себе" class="form__input" required minlength="2" maxlength="200">
+                    <input type="text" name="about" id="profile-about" placeholder="О себе" class="form__input" required minlength="2" maxlength="200">
                     <span id="error-profile-about" class="form__input-error"></span>
                 </div>
-                <button type="submit" class="button form__submit-button">Сохранить</button>
+                <button type="submit" class="button form__submit-button" name="submit">Сохранить</button>
             </form>
         </div>
     </div>
-    <div class="popup popup_type_edit-avatar">
+    <div class="popup popup_type_avatar-form">
         <div class="popup__container">
             <button type="button" aria-label="Закрыть" class="button popup__close-icon opacity"></button>
             <h2 class="popup__heading">Обновить аватар</h2>
-            <form class="form" name="avatar-form" novalidate>
+            <form class="form form-validate" name="avatar-form" novalidate>
                 <div class="form__input-container">
-                    <input type="url" name="avatar-link" id="avatar-link" placeholder="Ссылка на картинку" class="form__input" required>
+                    <input type="url" name="avatar" id="avatar-link" placeholder="Ссылка на картинку" class="form__input" required>
                     <span id="error-avatar-link" class="form__input-error"></span>
                 </div>
-                <button type="submit" class="button form__submit-button">Сохранить</button>
+                <button type="submit" class="button form__submit-button" name="submit">Сохранить</button>
             </form>
         </div>
     </div>
-    <div class="popup popup_type_add-card">
+    <div class="popup popup_type_place-form">
         <div class="popup__container">
             <button type="button" aria-label="Закрыть" class="button popup__close-icon opacity"></button>
             <h2 class="popup__heading">Новое место</h2>
-            <form class="form" name="place-form" novalidate>
+            <form class="form form-validate" name="place-form" novalidate>
                 <div class="form__input-container">
-                    <input type="text" name="place-title" id="place-title" placeholder="Название" class="form__input" required minlength="2" maxlength="30">
+                    <input type="text" name="name" id="place-title" placeholder="Название" class="form__input" required minlength="2" maxlength="30">
                     <span id="error-place-title" class="form__input-error"></span>
-                    <input type="url" name="place-link" id="place-link" placeholder="Ссылка на картинку" class="form__input" required>
+                    <input type="url" name="link" id="place-link" placeholder="Ссылка на картинку" class="form__input" required>
                     <span id="error-place-link" class="form__input-error"></span>
                 </div>
-                <button type="submit" class="button form__submit-button">Создать</button>
+                <button type="submit" class="button form__submit-button" name="submit">Создать</button>
             </form>
         </div>
     </div>
-    <div class="popup popup_type_confirm-deletion">
+    <div class="popup popup_type_confirm-deletion-form">
         <div class="popup__container">
             <button type="button" aria-label="Закрыть" class="button popup__close-icon opacity"></button>
             <h2 class="popup__heading">Вы уверены</h2>
             <form class="form" name="confirm-deletion-form">
-                <button type="submit" class="button form__submit-button">Да</button>
+                <button type="submit" class="button form__submit-button" name="submit">Да</button>
             </form>
         </div>
     </div>

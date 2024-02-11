@@ -3,7 +3,6 @@ import {
   validationConfig,
   apiRequestConfig,
   profileSelectors,
-  loadingText,
   popupViewImageConfig,
   popupConfirmationConfig,
   formSelectors,
@@ -16,6 +15,7 @@ import Section from './components/Section.js';
 import PopupWithImage from './components/PopupWithImage.js';
 import PopupWithForm from './components/PopupWithForm.js';
 import PopupConfirmation from './components/PopupConfirmation';
+import { handleSubmit } from './components/utils.js';
 
 const api = new Api(apiRequestConfig);
 const userInfo = new UserInfo(profileSelectors);
@@ -27,34 +27,22 @@ const renderItem = (item) => {
 
 const cardsList = new Section(renderItem, '.cards__list');
 
-const handleSubmit = (request, popupInstance) => {
-  popupInstance.toggleButtonText(true, loadingText);
-  request()
-    .then(() => {
-      popupInstance.close();
-    })
-    .catch(console.error)
-    .finally(() => {
-      popupInstance.toggleButtonText(false, loadingText);
-    });
-};
-
-const handleProfileSubmit = (userData, popupInstance) => {
+const handleProfileSubmit = (userData) => {
   const makeRequest = () => {
     return api.editUserData(userData).then((res) => {
       userInfo.setUserInfo(res);
     });
   };
-  handleSubmit(makeRequest, popupInstance);
+  handleSubmit(makeRequest, popupEditProfile);
 };
 
-const handleEditAvatar = ({ avatar }, popupInstance) => {
+const handleEditAvatar = ({ avatar }) => {
   const makeRequest = () => {
     return api.updateAvatar(avatar).then((res) => {
       userInfo.setUserInfo(res);
     });
   };
-  handleSubmit(makeRequest, popupInstance);
+  handleSubmit(makeRequest, popupEditAvatar);
 };
 
 const generateCard = (cardData) => {
@@ -69,14 +57,14 @@ const generateCard = (cardData) => {
   return newCardElement.createCardElement();
 };
 
-const cardAddSubmit = (cardData, popupInstance) => {
+const cardAddSubmit = (cardData) => {
   const makeRequest = () => {
     return api.addNewCard(cardData).then((res) => {
       const cardElement = generateCard(res);
       cardsList.addItem(cardElement);
     });
   };
-  handleSubmit(makeRequest, popupInstance);
+  handleSubmit(makeRequest, popupAddCard);
 };
 
 const handleDeletionRequest = (cardInstance) => {
@@ -120,7 +108,6 @@ const handleLikeClick = (isLiked, cardInstance) => {
 Promise.all([api.loadUserData(), api.loadCardsData()])
   .then(([userData, cards]) => {
     userInfo.setUserInfo(userData);
-    userInfo.setUserId(userData._id);
     cardsList.renderItems(cards);
   })
   .catch(console.error);
@@ -144,36 +131,33 @@ const {
 
 const popupEditProfile = new PopupWithForm(
   profile.popupSelector,
-  profile.form,
   handleProfileSubmit
 );
-formSelectors.editProfile.popupInstance = popupEditProfile;
 popupEditProfile.setEventListeners();
 
 const popupEditAvatar = new PopupWithForm(
   avatar.popupSelector,
-  avatar.form,
   handleEditAvatar
 );
-formSelectors.editAvatar.popupInstance = popupEditAvatar;
 popupEditAvatar.setEventListeners();
 
-const popupAddCard = new PopupWithForm(
-  add.popupSelector,
-  add.form,
-  cardAddSubmit
-);
-formSelectors.addCard.popupInstance = popupAddCard;
+const popupAddCard = new PopupWithForm(add.popupSelector, cardAddSubmit);
 popupAddCard.setEventListeners();
 
 // Создание слушателей для кнопок
 
-for (let item in formSelectors) {
-  formSelectors[item].openButton.addEventListener('click', () => {
-    if (formSelectors[item].formSelector === 'profile-form') {
-      formSelectors[item].popupInstance.setInputValues(userInfo.getUserInfo());
-    }
-    formSelectors[item].validatorInstance.resetFormValidator();
-    formSelectors[item].popupInstance.open();
-  });
-}
+profile.openButton.addEventListener('click', () => {
+  popupEditProfile.setInputValues(userInfo.getUserInfo());
+  profile.validatorInstance.resetFormValidator();
+  popupEditProfile.open();
+});
+
+add.openButton.addEventListener('click', () => {
+  add.validatorInstance.resetFormValidator();
+  popupAddCard.open();
+});
+
+avatar.openButton.addEventListener('click', () => {
+  avatar.validatorInstance.resetFormValidator();
+  popupEditAvatar.open();
+});

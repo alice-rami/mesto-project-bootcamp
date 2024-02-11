@@ -20,11 +20,10 @@ export default class Card {
   }
 
   _getCardTemplate() {
-    const cardElement = document
+    return document
       .getElementById(this._selector)
       .content.querySelector('.card')
       .cloneNode(true);
-    return cardElement;
   }
 
   _getCardData() {

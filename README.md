@@ -2,7 +2,7 @@
 
 Интерактивный сайт с возможностью загружать фотографии, удалять их и ставить лайки.
 
-[https://alice-rami.github.io/mesto-project-bootcamp/]
+[Проект Mesto на GitHub Pages](https://alice-rami.github.io/mesto-project-bootcamp/)
 
 ## Возможности
 * Адаптивность: сайт работает разных устройствах.
@@ -31,7 +31,4 @@
 * БЭМ
 * JavaScript
 * Webpack, Babel, PostCSS
-
-## Планы по доработке проекта
-
-* Усовершенствовать обработку ошибок.
+* ООП
